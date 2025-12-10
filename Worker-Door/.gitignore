@@ -1,0 +1,11 @@
+# Python
+__pycache__/
+venv/
+
+# Unit testing
+.pytest_cache/
+.coverage
+coverage.lcov
+
+# Secrets
+secrets.py

@@ -1,0 +1,104 @@
+name: CI
+on:
+  push:
+    branches:
+      - '*'
+    tags-ignore:
+      - v**
+jobs:
+  worker-door:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+      - name: Setup Python 3
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+          cache: 'pip'
+      - name: Clone espark repository
+        run: git clone https://github.com/ayltai/espark.git ../espark
+      - name: Install dependencies
+        run: make upgrade
+        working-directory: Worker-Door
+      - name: Linting
+        run: make lint
+        working-directory: Worker-Door
+      - name: Unit tests
+        run: make test
+        working-directory: Worker-Door
+      - name: Upload coverage
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: coverage-worker-door.lcov
+          path: Worker-Door/coverage.lcov
+  worker-thermo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+      - name: Setup Python 3
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+          cache: 'pip'
+      - name: Clone espark repository
+        run: git clone https://github.com/ayltai/espark.git ../espark
+      - name: Install dependencies
+        run: make upgrade
+        working-directory: Worker-Thermo
+      - name: Linting
+        run: make lint
+        working-directory: Worker-Thermo
+      - name: Unit tests
+        run: make test
+        working-directory: Worker-Thermo
+      - name: Upload coverage
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: coverage-worker-thermo.lcov
+          path: Worker-Thermo/coverage.lcov
+  master-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+      - name: Setup Python 3
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+          cache: 'pip'
+      - name: Install dependencies
+        run: make upgrade
+        working-directory: Master/backend
+      - name: Linting
+        run: make lint
+        working-directory: Master/backend
+      - name: Unit tests
+        run: make test
+        working-directory: Master/backend
+      - name: Upload coverage
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: coverage-master-backend.lcov
+          path: Master/backend/coverage.lcov
+  master-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: false
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: '24'
+      - name: Install dependencies
+        run: pnpm i
+        working-directory: Master/frontend

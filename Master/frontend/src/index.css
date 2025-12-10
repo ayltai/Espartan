@@ -1,0 +1,19 @@
+a, a:hover, a:active {
+    text-decoration: none;
+}
+
+a {
+    color: #f57c00;
+}
+
+a:hover, a:active {
+    color: #e65100;
+}
+
+.ant-btn-variant-link {
+    color: #f57c00 !important;
+}
+
+.ant-btn-variant-link:hover, .ant-btn-variant-link:active {
+    color: #e65100 !important;
+}

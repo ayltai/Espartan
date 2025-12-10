@@ -1,0 +1,26 @@
+# macOS
+.DS_Store
+
+# JetBrains IDEs
+**/.idea/
+
+# Python
+**/__pycache__/
+
+# VirtualEnv
+**/venv/
+
+# Node.js
+**/node_modules/
+
+# Docker
+.dockerignore
+Dockerfile
+
+# Development
+.git/
+.github/
+.gitignore
+Makefile
+pylintrc
+setup.cfg

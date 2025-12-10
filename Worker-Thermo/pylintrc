@@ -1,0 +1,2 @@
+[MESSAGES CONTROL]
+disable = line-too-long, missing-class-docstring, missing-function-docstring, missing-module-docstring, redefined-builtin, too-few-public-methods, too-many-arguments, too-many-instance-attributes, too-many-positional-arguments

@@ -1,0 +1,10 @@
+# Node.js
+**/node_modules/
+
+# Testing
+coverage/
+
+# Generated
+dist/
+html/
+stats.html

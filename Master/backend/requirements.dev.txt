@@ -1,0 +1,8 @@
+autopep8
+fastapi-cli[standard-no-fastapi-cloud-cli]
+httpx
+pycodestyle
+pylint
+pytest
+pytest-asyncio
+pytest-cov

@@ -1,0 +1,4 @@
+aiosqlite
+fastapi
+espark-core
+pydantic-settings

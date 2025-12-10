@@ -1,0 +1,5 @@
+TOPIC_DEVICE       : str = 'espark/device'
+TOPIC_REGISTRATION : str = 'espark/registration'
+TOPIC_TELEMETRY    : str = 'espark/telemetry'
+TOPIC_ACTION       : str = 'espark/action'
+TOPIC_CRASH        : str = 'espark/crash'
