@@ -1,4 +1,8 @@
 import esparknode.configs
+import esparknode.constants
+
+esparknode.constants.NODE_NAME    = 'node-door'
+esparknode.constants.NODE_VERSION = '0.4.0'
 
 esparknode.configs.ENVIRONMENT = 'unix'
 
@@ -31,5 +35,5 @@ BUZZER_PIN        : int = 10
 MOTION_SENSOR_NAME : str = 'motion'
 SWITCH_NAME        : str = 'switch'
 
-DETECTION_DELAY        : int = 180
-MAX_DETECTION_DURATION : int = 360
+DETECTION_DELAY        : int = 300
+MAX_DETECTION_DURATION : int = 600

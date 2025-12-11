@@ -2,7 +2,7 @@ from json import dumps
 from time import sleep, time
 
 from esparknode.configs import CAPABILITIES, ENVIRONMENT, PARAMETERS_UPDATE_TIMEOUT, UNUSED_PINS
-from esparknode.constants import TOPIC_ACTION, TOPIC_DEVICE, TOPIC_REGISTRATION
+from esparknode.constants import NODE_NAME, NODE_VERSION, TOPIC_ACTION, TOPIC_DEVICE, TOPIC_OTP, TOPIC_REGISTRATION
 from esparknode.networks.base_bluetooth import BaseBluetoothManager
 from esparknode.networks.base_mqtt import BaseMQTTManager
 from esparknode.networks.base_wifi import BaseWiFiManager
@@ -62,6 +62,8 @@ class BaseNode:
             self._handle_action(payload)
         elif topic == f'{TOPIC_DEVICE}/{self.device_id}':
             self._handle_parameters_update(payload)
+        elif topic == f'{TOPIC_OTP}/{self.device_id}':
+            self._handle_otp(payload)
 
     # pylint: disable=unused-argument
     def _handle_parameters_update(self, parameters: dict) -> None:
@@ -70,16 +72,37 @@ class BaseNode:
     def _handle_action(self, payload: dict) -> None:
         pass
 
+    def _handle_otp(self, payload: dict) -> None:
+        pass
+
     def register(self) -> None:
         log_debug(f'Registering device {self.device_id}...')
 
         self.mqtt_manager.publish(f'{TOPIC_REGISTRATION}/{self.device_id}', dumps({
             'device_id'    : self.device_id,
+            'app_name'     : NODE_NAME,
+            'app_version'  : NODE_VERSION,
             'capabilities' : ','.join(CAPABILITIES),
         }))
 
     def publish_telemetry(self):
-        pass
+        for sensor in self.sensors:
+            try:
+                telemetry = sensor.read()
+                if telemetry is not None:
+                    for data_type, value in telemetry.items():
+                        payload = {
+                            'device_id' : self.device_id,
+                            'data_type' : data_type,
+                            'value'     : round(value * 100),
+                        }
+
+                        log_debug(f'Publishing telemetry data for device {self.device_id}: {dumps(payload)}')
+
+                        self.mqtt_manager.publish(f'{TOPIC_DEVICE}/{self.device_id}', dumps(payload))
+            # pylint: disable=broad-exception-caught
+            except Exception as e:
+                log_debug(f'Error reading from sensor {sensor.__class__.__name__}: {e}')
 
     def start(self) -> None:
         self.register()

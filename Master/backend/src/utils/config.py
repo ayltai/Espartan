@@ -10,6 +10,8 @@ class AppConfig(BaseSettings):
     database_url                : str = 'sqlite+aiosqlite:///database.db'
     mqtt_host                   : str = 'localhost'
     mqtt_port                   : int = 1883
+    slack_token                 : str = ''
+    slack_channel               : str = ''
     device_sleep_interval       : int = 600
     heating_evaluation_interval : int = 10
     heating_evaluation_strategy : str = 'min'

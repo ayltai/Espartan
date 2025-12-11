@@ -1,7 +1,4 @@
-from json import dumps
-
 from esparknode.actions.base_relay import BaseRelay
-from esparknode.constants import TOPIC_TELEMETRY
 from esparknode.base_node import BaseNode
 from esparknode.networks.base_bluetooth import BaseBluetoothManager
 from esparknode.networks.base_mqtt import BaseMQTTManager
@@ -54,21 +51,3 @@ class WorkerNode(BaseNode):
                 action.turn_on()
             else:
                 action.turn_off()
-
-    def publish_telemetry(self):
-        for sensor in self.sensors:
-            try:
-                for data_type, value in sensor.read().items():
-                    payload = {
-                        'device_id' : self.device_id,
-                        'data_type' : data_type,
-                        'value'     : round(value * 100),
-                    }
-
-                    log_debug(f'Publishing telemetry data for device {self.device_id}: {dumps(payload)}')
-
-                    self.mqtt_manager.publish(f'{TOPIC_TELEMETRY}/{self.device_id}', dumps(payload))
-            # pylint: disable=broad-exception-caught
-            except Exception as e:
-                log_debug(f'Error reading from sensor {sensor.__class__.__name__}: {e}')
-                continue

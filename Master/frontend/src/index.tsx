@@ -49,7 +49,14 @@ const Root = () => (
                             </Typography.Title>
                         ),
                     }}
-                    apiEndpoint={import.meta.env.DEV ? `http://${window.location.hostname}:8000/api/v1` : 'api/v1'} />
+                    telemetryDataTransformer={(value : number, dataType : string) => {
+                        if (dataType === 'door_open') return value === 100 ? 'Opened' : value === 200 ? 'Opened (Warning)' : value === 300 ? 'Opened (Critical)' : 'Closed';
+
+                        if (dataType === 'motion') return value === 100 ? 'Motion Detected' : 'No Motion';
+
+                        return (value / 100.0).toFixed(1);
+                    }}
+                    apiEndpoint={import.meta.env.DEV ? `http://${window.location.hostname}:8000/api/v1` : '/api/v1'} />
             </ErrorBoundary>
         </Suspense>
     </StrictMode>
