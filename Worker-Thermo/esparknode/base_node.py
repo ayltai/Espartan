@@ -2,7 +2,7 @@ from json import dumps
 from time import sleep, time
 
 from esparknode.configs import CAPABILITIES, ENVIRONMENT, PARAMETERS_UPDATE_TIMEOUT, UNUSED_PINS
-from esparknode.constants import NODE_NAME, NODE_VERSION, TOPIC_ACTION, TOPIC_DEVICE, TOPIC_OTP, TOPIC_REGISTRATION
+from esparknode.constants import NODE_NAME, NODE_VERSION, TOPIC_ACTION, TOPIC_DEVICE, TOPIC_OTP, TOPIC_REGISTRATION, TOPIC_TELEMETRY
 from esparknode.networks.base_bluetooth import BaseBluetoothManager
 from esparknode.networks.base_mqtt import BaseMQTTManager
 from esparknode.networks.base_wifi import BaseWiFiManager
@@ -99,7 +99,9 @@ class BaseNode:
 
                         log_debug(f'Publishing telemetry data for device {self.device_id}: {dumps(payload)}')
 
-                        self.mqtt_manager.publish(f'{TOPIC_DEVICE}/{self.device_id}', dumps(payload))
+                        self.mqtt_manager.publish(f'{TOPIC_TELEMETRY}/{self.device_id}', dumps(payload))
+
+                        self.watchdog.feed()
             # pylint: disable=broad-exception-caught
             except Exception as e:
                 log_debug(f'Error reading from sensor {sensor.__class__.__name__}: {e}')

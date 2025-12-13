@@ -12,3 +12,6 @@ coverage.lcov
 # Generated
 *.egg-info/
 database.db
+
+# Secrets
+.env

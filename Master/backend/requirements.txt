@@ -1,4 +1,5 @@
-aiosqlite==0.21.0
-fastapi==0.124.2
-espark-core==0.4.8
+aiosqlite==0.22.0
+fastapi==0.124.4
+#espark-core @file:../../../espark/espark-core
+espark-core==0.4.9
 pydantic-settings==2.12.0

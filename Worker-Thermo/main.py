@@ -1,9 +1,10 @@
-import src.configs
 import esparknode.configs
 
 from esparknode.actions.base_relay import BaseRelay
 from esparknode.sensors.base_sensor import BaseSensor
-from esparknode.utils.logging import log_crash
+from esparknode.utils.logging import log_crash, log_debug
+
+import src.configs
 
 from src.secrets import MQTT_HOST, WIFI_PASSWORD, WIFI_SSID
 from src.worker_node import WorkerNode
@@ -58,7 +59,7 @@ bluetooth_manager = BluetoothManager()
 wifi_manager      = WiFiManager(watchdog=watchdog, ssid=WIFI_SSID, password=WIFI_PASSWORD)
 mqtt_manager      = MQTTManager(wifi_manager=wifi_manager, watchdog=watchdog, device_id=id, host=MQTT_HOST)
 
-print(f'Starting device with ID: {id}')
+log_debug(f'Starting device with ID: {id}')
 
 try:
     WorkerNode(

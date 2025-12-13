@@ -54,6 +54,12 @@ const Root = () => (
 
                         if (dataType === 'motion') return value === 100 ? 'Motion Detected' : 'No Motion';
 
+                        if (dataType === 'battery') return `${(value / 100.0).toFixed(0)} %`;
+
+                        if (dataType === 'humidity') return `${(value / 100.0).toFixed(1)} %`;
+
+                        if (dataType === 'temperature') return `${(value / 100.0).toFixed(1)} °C`;
+
                         return (value / 100.0).toFixed(1);
                     }}
                     apiEndpoint={import.meta.env.DEV ? `http://${window.location.hostname}:8000/api/v1` : '/api/v1'} />

@@ -42,7 +42,7 @@ class WorkerNode(BaseNode):
         super()._handle_parameters_update(parameters)
 
     def _handle_action(self, payload: dict) -> None:
-        state : bool = payload['relay_state'] == 1
+        state : bool = payload['state'] == 1
 
         log_debug(f'Setting relay state to: {state}')
 
@@ -51,3 +51,5 @@ class WorkerNode(BaseNode):
                 action.turn_on()
             else:
                 action.turn_off()
+
+            self.watchdog.feed()

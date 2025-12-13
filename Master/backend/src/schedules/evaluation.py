@@ -45,11 +45,6 @@ async def evaluate():
 
         log_debug(f'Decision made: {"ON" if decision else "OFF"}')
 
-        if (decision and current_state == 1) or (not decision and current_state == 0):
-            return
-
-        log_debug('Updating actuator state')
-
         relay = await _upsert_relay(session, relay_repo, actuators[0].id, 1 if decision else 0)
 
         await _upsert_event(session, outbox_repo, actuators[0].id, relay.state)

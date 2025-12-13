@@ -6,4 +6,4 @@ TOPIC_OTP          : str = 'espark/otp'
 TOPIC_CRASH        : str = 'espark/crash'
 
 NODE_NAME    : str = 'espark-node'
-NODE_VERSION : str = '0.4.0'
+NODE_VERSION : str = '0.0.0'

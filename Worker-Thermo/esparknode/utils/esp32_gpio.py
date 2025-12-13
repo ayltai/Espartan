@@ -3,8 +3,8 @@ from machine import Pin
 
 
 class GpioPin:
-    def __init__(self, pin: int):
-        self.pin = Pin(pin, Pin.OUT)
+    def __init__(self, pin: int, initial_state: int = None):
+        self.pin = Pin(pin, Pin.OUT, value=initial_state)
 
     def set_high(self):
         self.pin.value(1)
