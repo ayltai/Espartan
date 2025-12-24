@@ -4,7 +4,7 @@ from time import sleep, time
 from umqtt.simple import MQTTClient
 
 from esparknode.configs import MQTT_KEEPALIVE, MQTT_TIMEOUT
-from esparknode.constants import TOPIC_ACTION, TOPIC_DEVICE, TOPIC_OTP
+from esparknode.constants import TOPIC_ACTION, TOPIC_DEVICE, TOPIC_OTA
 from esparknode.networks.base_mqtt import BaseMQTTManager
 from esparknode.networks.base_wifi import BaseWiFiManager
 from esparknode.utils.base_watchdog import BaseWatchdog
@@ -44,7 +44,7 @@ class MQTTManager(BaseMQTTManager):
                 self.client.connect()
                 self.client.subscribe(f'{TOPIC_DEVICE}/{self.device_id}', qos=1)
                 self.client.subscribe(f'{TOPIC_ACTION}/{self.device_id}', qos=1)
-                self.client.subscribe(f'{TOPIC_OTP}/{self.device_id}', qos=1)
+                self.client.subscribe(f'{TOPIC_OTA}/{self.device_id}', qos=1)
 
                 return True
             # pylint: disable=broad-exception-caught

@@ -30,7 +30,7 @@ if esparknode.configs.ENVIRONMENT == 'unix':
 elif esparknode.configs.ENVIRONMENT == 'esp32':
     from machine import unique_id
 
-    from esparknode.actions.esp32_relay import Relay
+    from esparknode.actions.latching_relay import LatchingRelay
     from esparknode.networks.esp32_bluetooth import BluetoothManager
     from esparknode.networks.esp32_mqtt import MQTTManager
     from esparknode.networks.esp32_wifi import WiFiManager
@@ -42,8 +42,8 @@ elif esparknode.configs.ENVIRONMENT == 'esp32':
     device_id : bytes = unique_id()
 
     actions : list[BaseRelay] = [
-        Relay(src.configs.RELAY_PIN),
-    ]
+        LatchingRelay(src.configs.RELAY_SET_PIN, src.configs.RELAY_RESET_PIN, inverted=True),
+    ] if src.configs.MODE == 'actuator' else []
 
     sensors : list[BaseSensor] = [
         SHT20Sensor(scl_pin=src.configs.SCL_PIN, sda_pin=src.configs.SDA_PIN),

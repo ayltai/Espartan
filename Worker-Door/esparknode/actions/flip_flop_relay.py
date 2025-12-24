@@ -7,26 +7,30 @@ from esparknode.utils.esp32_gpio import GpioPin
 RELAY_STATE_KEY : str = 'relay_state'
 
 
-class Relay(BaseRelay):
+class FlipFlopRelay(BaseRelay):
     def __init__(self, pin: int):
-        self.pin     = GpioPin(pin)
+        self.pin     = pin
         self.storage = Storage()
 
     def turn_on(self):
         current_state = self.storage.get_int(RELAY_STATE_KEY)
         if current_state != 1:
-            self.pin.set_high()
+            pin = GpioPin(self.pin)
+            pin.set_high()
             sleep(0.5)
-            self.pin.set_low()
+            pin.set_low()
+            pin.deinit()
 
             self.storage.set_int(RELAY_STATE_KEY, 1)
 
     def turn_off(self):
         current_state = self.storage.get_int(RELAY_STATE_KEY)
         if current_state != 0:
-            self.pin.set_high()
+            pin = GpioPin(self.pin)
+            pin.set_high()
             sleep(0.5)
-            self.pin.set_low()
+            pin.set_low()
+            pin.deinit()
 
             self.storage.set_int(RELAY_STATE_KEY, 0)
 

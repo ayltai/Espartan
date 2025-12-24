@@ -54,11 +54,11 @@ const Root = () => (
 
                         if (dataType === 'motion') return value === 100 ? 'Motion Detected' : 'No Motion';
 
-                        if (dataType === 'battery') return `${(value / 100.0).toFixed(0)} %`;
+                        if (dataType === 'battery') return `${(value / 100.0).toFixed(0)}%`;
 
-                        if (dataType === 'humidity') return `${(value / 100.0).toFixed(1)} %`;
+                        if (dataType === 'humidity') return `${(value / 100.0).toFixed(1)}%`;
 
-                        if (dataType === 'temperature') return `${(value / 100.0).toFixed(1)} °C`;
+                        if (dataType === 'temperature') return `${(value / 100.0).toFixed(1)}°C`;
 
                         return (value / 100.0).toFixed(1);
                     }}

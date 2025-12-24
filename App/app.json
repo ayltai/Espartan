@@ -1,0 +1,53 @@
+{
+    "expo" : {
+        "name"               : "Espartan-Mail",
+        "slug"               : "espartan-mail",
+        "version"            : "0.5.0",
+        "orientation"        : "portrait",
+        "icon"               : "./assets/icon.png",
+        "userInterfaceStyle" : "light",
+        "newArchEnabled"     : true,
+        "plugins"            : [
+            [
+                "expo-localization",
+                {
+                    "supportedLocales" : {
+                        "android" : [
+                            "en"
+                        ],
+                        "ios"     : [
+                            "en"
+                        ]
+                    }
+                }
+            ],
+            [
+                "@sentry/react-native/expo",
+                {
+                    "url"          : "https://sentry.io/",
+                    "project"      : "espartan-app",
+                    "organization" : "geekylifehacks"
+                }
+            ]
+        ],
+        "splash"             : {
+            "image"           : "./assets/splash-icon.png",
+            "resizeMode"      : "contain",
+            "backgroundColor" : "#ffffff"
+        },
+        "ios"                : {
+            "supportsTablet" : true
+        },
+        "android"            : {
+            "adaptiveIcon"                 : {
+                "foregroundImage" : "./assets/adaptive-icon.png",
+                "backgroundColor" : "#ffffff"
+            },
+            "edgeToEdgeEnabled"            : true,
+            "predictiveBackGestureEnabled" : false
+        },
+        "web"                : {
+            "favicon" : "./assets/favicon.png"
+        }
+    }
+}

@@ -6,10 +6,13 @@ from esparknode.triggers.base_trigger import BaseTrigger
 
 
 class GpioInterrupt(BaseTrigger):
-    def __init__(self, pin, pull: int = None, name: str = None):
+    def __init__(self, pin: int, pull: int = None, name: str = None):
         super().__init__('gpio_interrupt', name=name)
 
         self.pin = Pin(pin, Pin.IN, pull)
+
+    def get_value(self):
+        return self.pin.value()
 
     def start(self):
         self.pin.irq(trigger=Pin.IRQ_RISING | Pin.IRQ_FALLING, handler=self._irq_handler)

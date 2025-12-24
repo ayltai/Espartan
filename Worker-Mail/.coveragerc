@@ -1,0 +1,21 @@
+[run]
+source = src
+omit =
+    esparknode/**/*
+    */tests/*
+    */__pycache__/*
+    */venv/*
+    *.pyc
+
+[report]
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    raise NotImplementedError
+    if __name__ == .__main__.:
+    pass
+    raise ImportError
+fail_under = 60
+
+[html]
+directory = coverage_html

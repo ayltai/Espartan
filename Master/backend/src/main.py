@@ -2,10 +2,11 @@ from asyncio import create_task
 from contextlib import asynccontextmanager
 from os import path
 
-from esparkcore.data.repositories import AppVersionRepository, DeviceRepository, TelemetryRepository
+from esparkcore.data.repositories import AppVersionRepository, DeviceRepository, NotificationRepository, TelemetryRepository, TriggerRepository
 from esparkcore.data import init_db
-from esparkcore.routers import AppVersionRouter, DeviceRouter, TelemetryRouter
+from esparkcore.routers import AppVersionRouter, DeviceRouter, NotificationRouter, TelemetryRouter, TriggerRouter
 from esparkcore.schedules import start_scheduler
+from esparkcore.services import MQTTManager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -14,13 +15,14 @@ from .data.repositories import RelayRepository, SettingsRepository
 from .data import init_settings
 from .routers import RelayRouter, SettingsRouter
 from .schedules import evaluate, process_outbox
-from .services import ReactiveMQTTManager
 from .utils import AppConfig
 
-app_config     = AppConfig()
-device_repo    = DeviceRepository()
-telemetry_repo = TelemetryRepository()
-version_repo   = AppVersionRepository()
+app_config        = AppConfig()
+device_repo       = DeviceRepository()
+notification_repo = NotificationRepository()
+telemetry_repo    = TelemetryRepository()
+trigger_repo      = TriggerRepository()
+version_repo      = AppVersionRepository()
 
 
 class SpaStaticFiles(StaticFiles):
@@ -41,7 +43,7 @@ async def lifespan(_: FastAPI):
     scheduler.add_job(evaluate, 'interval', minutes=app_config.heating_evaluation_interval, id='evaluation_job', replace_existing=True)
     scheduler.add_job(process_outbox, 'interval', minutes=app_config.heating_evaluation_interval, id='outbox_consumer_job', replace_existing=True)
 
-    create_task(ReactiveMQTTManager(version_repo=version_repo, device_repo=device_repo, telemetry_repo=telemetry_repo).start())
+    create_task(MQTTManager(version_repo=version_repo, device_repo=device_repo, notification_repo=notification_repo, telemetry_repo=telemetry_repo, trigger_repo=trigger_repo).start())
 
     yield
 
@@ -50,9 +52,11 @@ app = FastAPI(title='Espartan API', version='v1', lifespan=lifespan)
 
 app.include_router(AppVersionRouter(version_repo).router)
 app.include_router(DeviceRouter(device_repo).router)
+app.include_router(NotificationRouter().router)
 app.include_router(RelayRouter(RelayRepository()).router)
 app.include_router(SettingsRouter(SettingsRepository()).router)
 app.include_router(TelemetryRouter(telemetry_repo).router)
+app.include_router(TriggerRouter().router)
 
 app.add_middleware(CORSMiddleware, expose_headers=['X-Total-Count'], allow_headers=['*'], allow_methods=['*'], allow_origins=['*'])
 

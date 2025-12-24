@@ -2,12 +2,14 @@ from json import dumps
 from time import sleep, time
 
 from esparknode.configs import CAPABILITIES, ENVIRONMENT, PARAMETERS_UPDATE_TIMEOUT, UNUSED_PINS
-from esparknode.constants import NODE_NAME, NODE_VERSION, TOPIC_ACTION, TOPIC_DEVICE, TOPIC_OTP, TOPIC_REGISTRATION, TOPIC_TELEMETRY
+from esparknode.constants import NODE_NAME, NODE_VERSION, TOPIC_ACTION, TOPIC_DEVICE, TOPIC_OTA, TOPIC_REGISTRATION, TOPIC_TELEMETRY
 from esparknode.networks.base_bluetooth import BaseBluetoothManager
 from esparknode.networks.base_mqtt import BaseMQTTManager
+from esparknode.networks.base_requests import BaseRequests
 from esparknode.networks.base_wifi import BaseWiFiManager
 from esparknode.sensors.base_sensor import BaseSensor
 from esparknode.triggers.base_trigger import BaseTrigger
+from esparknode.utils.base_ota_manager import BaseOtaManager
 from esparknode.utils.base_sleeper import BaseSleeper
 from esparknode.utils.base_watchdog import BaseWatchdog
 from esparknode.utils.logging import log_debug
@@ -22,6 +24,8 @@ class BaseNode:
             wifi_manager      : BaseWiFiManager,
             mqtt_manager      : BaseMQTTManager,
             bluetooth_manager : BaseBluetoothManager = None,
+            requests          : BaseRequests         = None,
+            ota_manager       : BaseOtaManager       = None,
             sensors           : list[BaseSensor]     = None,
             triggers          : list[BaseTrigger]    = None,
     ):
@@ -31,6 +35,8 @@ class BaseNode:
         self.wifi_manager      = wifi_manager
         self.mqtt_manager      = mqtt_manager
         self.bluetooth_manager = bluetooth_manager
+        self.requests          = requests
+        self.ota_manager       = ota_manager
         self.sensors           = sensors if sensors is not None else []
         self.triggers          = triggers if triggers is not None else []
 
@@ -62,7 +68,7 @@ class BaseNode:
             self._handle_action(payload)
         elif topic == f'{TOPIC_DEVICE}/{self.device_id}':
             self._handle_parameters_update(payload)
-        elif topic == f'{TOPIC_OTP}/{self.device_id}':
+        elif topic == f'{TOPIC_OTA}/{self.device_id}':
             self._handle_otp(payload)
 
     # pylint: disable=unused-argument
@@ -73,7 +79,18 @@ class BaseNode:
         pass
 
     def _handle_otp(self, payload: dict) -> None:
-        pass
+        download_url = payload['download_url']
+        if download_url and self.requests:
+            log_debug(f'Downloading OTA update from {download_url}...')
+
+            ota_data = self.requests.get(download_url)
+            if ota_data and ota_data['status_code'] == 200:
+                log_debug('OTA update downloaded successfully, applying update...', payload['device_id'], self.mqtt_manager)
+
+                if self.ota_manager:
+                    self.ota_manager.apply(ota_data['text'])
+            else:
+                log_debug(f'Error {ota_data["status_code"]}: Failed to download OTA update.', payload['device_id'], self.mqtt_manager)
 
     def register(self) -> None:
         log_debug(f'Registering device {self.device_id}...')

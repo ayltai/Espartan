@@ -1,0 +1,1 @@
+export { espartanService, useGetConfigurationsQuery, useGetCurrentStateQuery, useGetDeviceQuery, useGetDevicesQuery, useGetHistoricalTelemetryQuery, useGetRecentTelemetryQuery, useSetConfigurationsMutation, useSetDeviceMutation, } from './espartanService';

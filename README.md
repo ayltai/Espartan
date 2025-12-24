@@ -1,6 +1,6 @@
 # Espartan
 
-Espartan is a central management portal for ESP32-based smart thermostats and open-door sensors. It provides a user-friendly interface to provision, monitor, and control multiple devices from a single dashboard. It consists of a Python/FastAPI backend, MicroPython-based applications for the ESP32 devices, and a React frontend. It relies on the [espark](https://github.com/ayltai/espark) library for seamless communication between the frontend, backend, and the devices.
+Espartan is a central management portal for ESP32-based smart thermostats, open-door sensors, and mailbox sensors. It provides a user-friendly interface to provision, monitor, and control multiple devices from a single dashboard. It consists of a Python/FastAPI backend, MicroPython-based applications for the ESP32 devices, and a React frontend. It relies on the [espark](https://github.com/ayltai/espark) library for seamless communication between the frontend, backend, and the devices.
 
 ## Features
 
@@ -24,6 +24,7 @@ Espartan is a central management portal for ESP32-based smart thermostats and op
 - Magnetic reed switch
 - Active buzzer
 - LD2420 human presence sensor
+- PIR motion sensor
 - Battery
 
 ## Project Structure
@@ -40,24 +41,39 @@ Espartan/
 │   │   │   ├── strategies/   # Device control strategies
 │   │   │   ├── utils/        # Utility functions
 │   │   │   └── main.py       # Application entry point
+│   │   │
 │   │   ├── tests/            # Unit tests
 │   │   └── Dockerfile        # Backend containerisation
+│   │
 │   └── frontend/          # React frontend (TypeScript)
 │       ├── public/           # Static assets
 │       └── src/
 │           └── index.tsx     # Application entry point
+│
 ├── Worker-Door/        # ESP32 door sensor application (MicroPython)
 │   ├── src/
 │   │   ├── configs.py        # Application- and device-specific configurations
 │   │   ├── secrets.py        # Credentials and sensitive information
 │   │   └── worker_node.py    # Core application logic
+│   │
 │   ├── main.py            # Application entry point
 │   └── tests/             # Unit tests
+│
+├── Worker-Mail/        # ESP32 mailbox sensor application (MicroPython)
+│   ├── src/
+│   │   ├── configs.py        # Application- and device-specific configurations
+│   │   ├── secrets.py        # Credentials and sensitive information
+│   │   └── worker_node.py    # Core application logic
+│   │
+│   ├── main.py            # Application entry point
+│   └── tests/             # Unit tests
+│
 └── Worker-Thermostat/  # ESP32 thermostat application (MicroPython)
     ├── src/
     │   ├── configs.py        # Application- and device-specific configurations
     │   ├── secrets.py        # Credentials and sensitive information
     │   └── worker_node.py    # Core application logic
+    │
     ├── main.py            # Application entry point
     └── tests/             # Unit tests
 ```

@@ -2,7 +2,7 @@ import esparknode.configs
 import esparknode.constants
 
 esparknode.constants.NODE_NAME    = 'Espartan-Door'
-esparknode.constants.NODE_VERSION = '0.4.9'
+esparknode.constants.NODE_VERSION = '0.5.0'
 
 esparknode.configs.ENVIRONMENT = 'unix'
 

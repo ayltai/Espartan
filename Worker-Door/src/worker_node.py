@@ -45,6 +45,7 @@ class WorkerNode(BaseNode):
         self.detection_enabled      : bool = True
         self.max_detection_duration : int  = MAX_DETECTION_DURATION
         self.last_detection_time    : int  = 0
+        self.buzzer_enabled         : bool = True
         self.buzzer_started         : bool = False
         self.warnings_issued        : bool = False
 
@@ -55,6 +56,7 @@ class WorkerNode(BaseNode):
         self.sleep_interval         = parameters.get('sleep_interval', self.sleep_interval)
         self.max_detection_duration = parameters.get('max_detection_duration', self.max_detection_duration)
         self.detection_enabled      = parameters.get('detection_enabled', self.detection_enabled)
+        self.buzzer_enabled         = parameters.get('buzzer_enabled', self.buzzer_enabled)
 
         super()._handle_parameters_update(parameters)
 
@@ -96,6 +98,12 @@ class WorkerNode(BaseNode):
                     log_debug(f'Door open state: {door_open}', self.device_id, self.mqtt_manager)
 
                     if not door_open:
+                        self.mqtt_manager.publish(f'{TOPIC_TELEMETRY}/{self.device_id}', dumps({
+                            'device_id' : self.device_id,
+                            'data_type' : CAPABILITY_DOOR_OPEN,
+                            'value'     : 0,
+                        }))
+
                         gpio_interrupt.wake_on(0)
 
                         self.stop_buzzer()
@@ -146,7 +154,12 @@ class WorkerNode(BaseNode):
             while self.detection_enabled and (time() - detection_start) < max_detection_duration:
                 detection_start = max(self.last_detection_time, detection_start)
 
+                if not self.buzzer_enabled:
+                    self.stop_buzzer()
+
                 if time() - detection_start > self.sleep_interval:
+                    self._on_door_closed()
+
                     if not self.warnings_issued:
                         self.warnings_issued = True
 
@@ -166,7 +179,7 @@ class WorkerNode(BaseNode):
 
                 self.watchdog.feed()
 
-                sleep(1)
+                sleep(5)
 
             self.stop_detection()
 
@@ -188,7 +201,7 @@ class WorkerNode(BaseNode):
             trigger.stop()
 
     def start_buzzer(self) -> None:
-        if not self.buzzer_started:
+        if self.buzzer_enabled and not self.buzzer_started:
             log_debug('Starting buzzer...')
 
             self.buzzer_started = True

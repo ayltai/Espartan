@@ -1,0 +1,21 @@
+# macOS
+.DS_Store
+
+# dependencies
+node_modules/
+
+# Testing
+coverage/
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# local env files
+.env*.local
+
+# generated native folders
+/ios
+/android
