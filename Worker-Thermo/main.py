@@ -47,6 +47,8 @@ elif esparknode.configs.ENVIRONMENT == 'esp32':
 
     sensors : list[BaseSensor] = [
         SHT20Sensor(scl_pin=src.configs.SCL_PIN, sda_pin=src.configs.SDA_PIN),
+    ] if src.configs.MODE == 'actuator' else [
+        SHT20Sensor(scl_pin=src.configs.SCL_PIN, sda_pin=src.configs.SDA_PIN),
         VoltageSensor(pin=src.configs.VOLTAGE_PIN, voltage_full=src.configs.VOLTAGE_FULL, voltage_empty=src.configs.VOLTAGE_EMPTY, voltage_divider_ratio=src.configs.VOLTAGE_DIVIDER_RATIO),
     ]
 else:

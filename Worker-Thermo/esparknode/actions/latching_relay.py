@@ -14,32 +14,34 @@ class LatchingRelay(BaseRelay):
         pin = GpioPin(self.pin_set)
 
         if self.inverted:
+            pin.set_high()
+            sleep(0.5)
             pin.set_low()
-        else:
+            sleep(0.5)
             pin.set_high()
-
-        sleep(0.5)
-
-        if self.inverted:
-            pin.set_high()
+            sleep(0.5)
         else:
             pin.set_low()
-
-        pin.deinit()
+            sleep(0.5)
+            pin.set_high()
+            sleep(0.5)
+            pin.set_low()
+            sleep(0.5)
 
     def turn_off(self):
         pin = GpioPin(self.pin_reset)
 
         if self.inverted:
+            pin.set_high()
+            sleep(0.5)
             pin.set_low()
-        else:
+            sleep(0.5)
             pin.set_high()
-
-        sleep(0.5)
-
-        if self.inverted:
-            pin.set_high()
+            sleep(0.5)
         else:
             pin.set_low()
-
-        pin.deinit()
+            sleep(0.5)
+            pin.set_high()
+            sleep(0.5)
+            pin.set_low()
+            sleep(0.5)

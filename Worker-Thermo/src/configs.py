@@ -12,7 +12,6 @@ MODE = 'actuator'
 if MODE == 'actuator':
     esparknode.configs.CAPABILITIES = [
         'action_relay',
-        'battery',
         'humidity',
         'temperature',
     ]
@@ -26,6 +25,8 @@ elif MODE == 'sensor':
 if MODE == 'actuator':
     esparknode.configs.UNUSED_PINS = [
         0,
+        1,
+        3,
         4,
         5,
         6,
@@ -53,7 +54,7 @@ VOLTAGE_PIN     : int = 1
 RELAY_SET_PIN   : int = 2
 RELAY_RESET_PIN : int = 3
 
-VOLTAGE_FULL  : float = 3 * 1.5
+VOLTAGE_FULL  : float = 3 * 1.3
 VOLTAGE_EMPTY : float = 3 * 1.1
 
 VOLTAGE_DIVIDER_RATIO : float = 5.0

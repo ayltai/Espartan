@@ -24,8 +24,8 @@ async def ensure_settings(session: AsyncSession) -> None:
     if not existing:
         settings.id                = 1
         settings.threshold_on      = 17.5
-        settings.threshold_off     = 18.5
-        settings.decision_strategy = 'min'
+        settings.threshold_off     = 18.0
+        settings.decision_strategy = 'avg'
 
         session.add(settings)
 

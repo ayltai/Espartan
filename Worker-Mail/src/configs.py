@@ -13,9 +13,9 @@ esparknode.configs.CAPABILITIES = [
 ]
 
 esparknode.configs.UNUSED_PINS = [
-    0,
     1,
     2,
+    3,
     5,
     6,
     7,
@@ -25,8 +25,5 @@ esparknode.configs.UNUSED_PINS = [
     21,
 ]
 
-DOOR_IN_PIN  : int = 3
+DOOR_IN_PIN  : int = 0
 DOOR_OUT_PIN : int = 4
-
-DOOR_IN_NAME  : str = 'door_in'
-DOOR_OUT_NAME : str = 'door_out'

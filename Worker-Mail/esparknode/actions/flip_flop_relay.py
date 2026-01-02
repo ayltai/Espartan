@@ -8,18 +8,30 @@ RELAY_STATE_KEY : str = 'relay_state'
 
 
 class FlipFlopRelay(BaseRelay):
-    def __init__(self, pin: int):
-        self.pin     = pin
-        self.storage = Storage()
+    def __init__(self, pin: int, inverted: bool = False):
+        self.pin      = pin
+        self.inverted = inverted
+        self.storage  = Storage()
 
     def turn_on(self):
         current_state = self.storage.get_int(RELAY_STATE_KEY)
         if current_state != 1:
             pin = GpioPin(self.pin)
-            pin.set_high()
-            sleep(0.5)
-            pin.set_low()
-            pin.deinit()
+
+            if self.inverted:
+                pin.set_high()
+                sleep(0.5)
+                pin.set_low()
+                sleep(0.5)
+                pin.set_high()
+                sleep(0.5)
+            else:
+                pin.set_low()
+                sleep(0.5)
+                pin.set_high()
+                sleep(0.5)
+                pin.set_low()
+                sleep(0.5)
 
             self.storage.set_int(RELAY_STATE_KEY, 1)
 
@@ -27,10 +39,21 @@ class FlipFlopRelay(BaseRelay):
         current_state = self.storage.get_int(RELAY_STATE_KEY)
         if current_state != 0:
             pin = GpioPin(self.pin)
-            pin.set_high()
-            sleep(0.5)
-            pin.set_low()
-            pin.deinit()
+
+            if self.inverted:
+                pin.set_high()
+                sleep(0.5)
+                pin.set_low()
+                sleep(0.5)
+                pin.set_high()
+                sleep(0.5)
+            else:
+                pin.set_low()
+                sleep(0.5)
+                pin.set_high()
+                sleep(0.5)
+                pin.set_low()
+                sleep(0.5)
 
             self.storage.set_int(RELAY_STATE_KEY, 0)
 

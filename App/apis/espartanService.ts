@@ -81,7 +81,7 @@ export const espartanService = createApi({
             query             : ({
                 deviceId,
                 offset,
-            }) => `/telemetry/history?deviceId=${deviceId}&offset=${offset}`,
+            }) => `/telemetry/history?device_id=${deviceId}&offset=${offset}`,
             transformResponse : (response : any) => response.map((item : any) => snakeCaseToCamelCase(item)),
             extraOptions      : {
                 maxRetries : API_MAX_RETRIES,

@@ -1,7 +1,7 @@
 {
     "expo" : {
-        "name"               : "Espartan-Mail",
-        "slug"               : "espartan-mail",
+        "name"               : "Espartan",
+        "slug"               : "espartan-app",
         "version"            : "0.5.0",
         "orientation"        : "portrait",
         "icon"               : "./assets/icon.png",

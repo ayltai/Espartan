@@ -4,7 +4,7 @@ import esparknode.constants
 esparknode.constants.NODE_NAME    = 'Espartan-Door'
 esparknode.constants.NODE_VERSION = '0.5.0'
 
-esparknode.configs.ENVIRONMENT = 'unix'
+esparknode.configs.ENVIRONMENT = 'esp32'
 
 CAPABILITY_DOOR_OPEN : str = 'door_open'
 CAPABILITY_MOTION    : str = 'motion'

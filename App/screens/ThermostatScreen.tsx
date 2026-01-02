@@ -71,9 +71,11 @@ export const ThermostatScreen = () => {
         return sum / count;
     }, [ telemetryData, ]);
 
+    const currentTemperature = useMemo(() => configurationsData?.decisionStrategy === 'avg' ? averageTemperature : lowestTemperature, [ configurationsData, averageTemperature, lowestTemperature, ]);
+
     const handleIncrementThreshold = () => {
         setConfiguration({
-            thresholdOn      : configurationsData!.thresholdOn + 0.5,
+            thresholdOn      : configurationsData!.thresholdOff,
             thresholdOff     : configurationsData!.thresholdOff + 0.5,
             decisionStrategy : configurationsData!.decisionStrategy,
         });
@@ -81,9 +83,17 @@ export const ThermostatScreen = () => {
 
     const handleDecrementThreshold = () => {
         setConfiguration({
-            thresholdOn      : configurationsData!.thresholdOn - 0.5,
+            thresholdOn      : configurationsData!.thresholdOff - 1.0,
             thresholdOff     : configurationsData!.thresholdOff - 0.5,
             decisionStrategy : configurationsData!.decisionStrategy,
+        });
+    };
+
+    const handleStrategyChange = (strategy : string) => {
+        setConfiguration({
+            thresholdOn      : configurationsData!.thresholdOn,
+            thresholdOff     : configurationsData!.thresholdOff,
+            decisionStrategy : strategy,
         });
     };
 
@@ -122,15 +132,90 @@ export const ThermostatScreen = () => {
                 alignItems     : 'center',
                 justifyContent : 'center',
             }}>
-                <AnimatedCircularProgress
-                    size={180}
-                    width={16}
-                    backgroundWidth={4}
-                    arcSweepAngle={240}
-                    rotation={240}
-                    lineCap='round'
-                    fill={((configurationsData?.decisionStrategy === 'avg' ? averageTemperature : lowestTemperature) / 100.0 - HEATING_TEMPERATURE_MIN) / (HEATING_TEMPERATURE_MAX - HEATING_TEMPERATURE_MIN) * 100}
-                    />
+                {configurationsData && (
+                    <>
+                        <AnimatedCircularProgress
+                            size={180}
+                            width={16}
+                            tintColor={currentTemperature < configurationsData.thresholdOn - 0.5 ? '#fbc02d' : currentTemperature > configurationsData.thresholdOff + 0.5 ? '#d32f2f' : '#388e3c'}
+                            backgroundWidth={2}
+                            backgroundColor='#607d8b'
+                            arcSweepAngle={240}
+                            rotation={240}
+                            lineCap='round'
+                            fill={(currentTemperature / 100.0 - HEATING_TEMPERATURE_MIN) / (HEATING_TEMPERATURE_MAX - HEATING_TEMPERATURE_MIN) * 100} />
+                        <Text
+                            style={{
+                                top       : '50%',
+                                left      : '50%',
+                                position  : 'absolute',
+                                transform : [
+                                    {
+                                        translateX : '-50%',
+                                    }, {
+                                        translateY : '-50%',
+                                    },
+                                ],
+                                textAlign : 'center',
+                                width     : '100%',
+                            }}
+                            variant='headlineMedium'>
+                            {currentTemperature ? (currentTemperature / 100.0).toFixed(1) : '-'}°C
+                        </Text>
+                        <Text
+                            style={{
+                                width          : '100%',
+                                left           : -32,
+                                top            : 40,
+                                display        : 'flex',
+                                flexDirection  : 'row',
+                                justifyContent : 'center',
+                                position       : 'absolute',
+                            }}
+                            variant='bodySmall'>
+                            15°C
+                        </Text>
+                        <Text
+                            style={{
+                                width          : '100%',
+                                left           : 32,
+                                top            : 40,
+                                display        : 'flex',
+                                flexDirection  : 'row',
+                                justifyContent : 'center',
+                                position       : 'absolute',
+                            }}
+                            variant='bodySmall'>
+                            20°C
+                        </Text>
+                        <Text
+                            style={{
+                                width          : '100%',
+                                left           : -48,
+                                top            : 140,
+                                display        : 'flex',
+                                flexDirection  : 'row',
+                                justifyContent : 'center',
+                                position       : 'absolute',
+                            }}
+                            variant='bodySmall'>
+                            5°C
+                        </Text>
+                        <Text
+                            style={{
+                                width          : '100%',
+                                left           : 48,
+                                top            : 140,
+                                display        : 'flex',
+                                flexDirection  : 'row',
+                                justifyContent : 'center',
+                                position       : 'absolute',
+                            }}
+                            variant='bodySmall'>
+                            30°C
+                        </Text>
+                    </>
+                )}
             </View>
             <View style={{
                 display       : 'flex',
@@ -138,12 +223,23 @@ export const ThermostatScreen = () => {
                 flexGrow      : 1,
                 alignItems    : 'center',
             }}>
-                <View>
+                <View style={{
+                    marginBottom   : 8,
+                    display        : 'flex',
+                    flexDirection  : 'row',
+                    alignItems     : 'center',
+                    justifyContent : 'center',
+                }}>
                     <FontAwesome6
                         name='fire-flame-curved'
                         size={32}
                         color={currentStateData === 1 ? '#d32f2f' : '#546e7a'} />
-                    <Text variant='headlineSmall'>
+                    &nbsp;
+                    <Text
+                        style={{
+                            color : currentStateData === 1 ? '#d32f2f' : '#546e7a',
+                        }}
+                        variant='headlineSmall'>
                         {currentStateData === 1 ? t('label_thermo_status_on') : t('label_thermo_status_off')}
                     </Text>
                 </View>
@@ -167,19 +263,40 @@ export const ThermostatScreen = () => {
                                 flexDirection  : 'row',
                                 justifyContent : 'space-between',
                             }}>
-                            <Text variant='bodyMedium'>
+                            <Text
+                                style={{
+                                    marginRight : 8,
+                                    flexGrow    : 1,
+                                }}
+                                variant='bodyMedium'>
                                 {device.displayName}
                             </Text>
-                            <Text variant='bodyMedium'>
+                            <Text
+                                style={{
+                                    width          : 64,
+                                    display        : 'flex',
+                                    flexDirection  : 'row',
+                                    justifyContent : 'center',
+                                }}
+                                variant='bodyMedium'>
                                 <FontAwesome6
                                     name='temperature-low'
                                     size={14} />
+                                &nbsp;
                                 {(telemetryData && telemetryData.filter(telemetry => telemetry.deviceId === device.id && telemetry.dataType === 'temperature')?.map(telemetry => telemetry.value / 100.0)[0]?.toFixed(1)) ?? '-'}°C
                             </Text>
-                            <Text variant='bodyMedium'>
+                            <Text
+                                style={{
+                                    width          : 64,
+                                    display        : 'flex',
+                                    flexDirection  : 'row',
+                                    justifyContent : 'center',
+                                }}
+                                variant='bodyMedium'>
                                 <FontAwesome6
                                     name='droplet'
                                     size={14} />
+                                &nbsp;
                                 {(telemetryData && telemetryData.filter(telemetry => telemetry.deviceId === device.id && telemetry.dataType === 'humidity')?.map(telemetry => telemetry.value / 100.0)[0]?.toFixed(0)) ?? '-'}%
                             </Text>
                         </View>
@@ -197,7 +314,7 @@ export const ThermostatScreen = () => {
                                 <IconButton
                                     disabled={isUpdatingConfigurations || configurationsData.thresholdOn <= HEATING_TEMPERATURE_MIN}
                                     size={32}
-                                    icon='sort-down'
+                                    icon='arrow-down-drop-circle-outline'
                                     onPress={handleDecrementThreshold} />
                                 <View
                                     style={{
@@ -216,7 +333,7 @@ export const ThermostatScreen = () => {
                                 <IconButton
                                     disabled={isUpdatingConfigurations || configurationsData.thresholdOn >= HEATING_TEMPERATURE_MAX}
                                     size={32}
-                                    icon='sort-up'
+                                    icon='arrow-up-drop-circle-outline'
                                     onPress={handleIncrementThreshold} />
                             </View>
                             <View style={{
@@ -229,6 +346,7 @@ export const ThermostatScreen = () => {
                                 <Text variant='bodyMedium'>
                                     {t('label_thermo_decision_strategy')}
                                 </Text>
+                                &nbsp;
                                 <SegmentedButtons
                                     density='small'
                                     buttons={[
@@ -243,13 +361,7 @@ export const ThermostatScreen = () => {
                                         },
                                     ]}
                                     value={configurationsData.decisionStrategy}
-                                    onValueChange={value => {
-                                        setConfiguration({
-                                            thresholdOn      : configurationsData.thresholdOn,
-                                            thresholdOff     : configurationsData.thresholdOff,
-                                            decisionStrategy : value,
-                                        });
-                                    }} />
+                                    onValueChange={handleStrategyChange} />
                             </View>
                         </>
                     )}

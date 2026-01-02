@@ -30,8 +30,8 @@ elif esparknode.configs.ENVIRONMENT == 'esp32':
     device_id : bytes = unique_id()
 
     triggers : list[BaseTrigger] = [
-        GpioInterrupt(pin=src.configs.SWITCH_PIN, pull=Pin.PULL_UP, name=src.configs.SWITCH_NAME),
-        GpioInterrupt(pin=src.configs.MOTION_SENSOR_PIN, name=src.configs.MOTION_SENSOR_NAME),
+        GpioInterrupt(pins=[src.configs.SWITCH_PIN], pull=Pin.PULL_UP, name=src.configs.SWITCH_NAME),
+        GpioInterrupt(pins=[src.configs.MOTION_SENSOR_PIN], name=src.configs.MOTION_SENSOR_NAME),
     ]
 else:
     raise RuntimeError(f'Unknown environment in configuration: {esparknode.configs.ENVIRONMENT}')

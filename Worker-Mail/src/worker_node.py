@@ -1,5 +1,5 @@
 from json import dumps
-from time import sleep, time
+from time import sleep
 
 import esparknode.configs
 
@@ -14,7 +14,7 @@ from esparknode.utils.base_sleeper import BaseSleeper
 from esparknode.utils.base_watchdog import BaseWatchdog
 from esparknode.utils.logging import log_debug
 
-from src.configs import CAPABILITY_MAIL, DOOR_IN_NAME, DOOR_IN_PIN, DOOR_OUT_NAME, DOOR_OUT_PIN
+from src.configs import CAPABILITY_MAIL
 
 
 class WorkerNode(BaseNode):
@@ -45,14 +45,18 @@ class WorkerNode(BaseNode):
         for trigger in self.triggers:
             trigger.register_callback(self._on_triggered)
 
-    # pylint: disable=unused-argument
-    def _on_triggered(self, value: bool, trigger: BaseTrigger) -> None:
-        log_debug(f'Trigger {trigger.get_name()} detected {str(value)}', self.device_id, self.mqtt_manager)
+        if esparknode.configs.ENVIRONMENT == 'esp32':
+            # pylint: disable=import-error,import-outside-toplevel
+            from esparknode.utils.esp32_gpio import GpioPin
 
+            GpioPin(8).set_low()
+
+    # pylint: disable=unused-argument
+    def _on_triggered(self, value: bool, trigger: BaseTrigger, pin_index: int = 0) -> None:
         self.mqtt_manager.publish(f'{TOPIC_TELEMETRY}/{self.device_id}', dumps({
             'device_id' : self.device_id,
             'data_type' : CAPABILITY_MAIL,
-            'value'     : (100 if value else -100) if trigger.get_name() == DOOR_IN_NAME else (200 if value else -200) if trigger.get_name() == DOOR_OUT_NAME else 0,
+            'value'     : (100 if value else -100) if pin_index == 0 else (200 if value else -200) if pin_index == 1 else 0,
         }))
 
     def publish_telemetry(self) -> None:
@@ -62,26 +66,37 @@ class WorkerNode(BaseNode):
                     # pylint: disable=import-error,import-outside-toplevel
                     from esparknode.triggers.gpio_interrupt import GpioInterrupt
 
-                    if (trigger.get_name() == DOOR_IN_NAME or trigger.get_name() == DOOR_OUT_NAME) and isinstance(trigger, GpioInterrupt):
-                        gpio_interrupt : GpioInterrupt = trigger
-                        door_open      : bool          = True if gpio_interrupt.value() == 0 else False
+                    if isinstance(trigger, GpioInterrupt):
+                        gpio_interrupt     : GpioInterrupt = trigger
+                        mail_in_door_open  : bool          = True if gpio_interrupt.value(0) == 1 else False
+                        mail_out_door_open : bool          = True if gpio_interrupt.value(1) == 1 else False
 
-                        log_debug(f'Publishing telemetry for trigger {trigger.get_name()}: {str(door_open)}', self.device_id, self.mqtt_manager)
-
-                        self._on_triggered(door_open, trigger)
+                        self._on_triggered(mail_in_door_open, trigger, 0)
+                        self._on_triggered(mail_out_door_open, trigger, 1)
 
         self.start_detection()
 
     def start_detection(self) -> None:
         if len(self.triggers) > 0:
-            for trigger in self.triggers:
-                if esparknode.configs.ENVIRONMENT == 'esp32':
-                    # pylint: disable=import-error,import-outside-toplevel
-                    from esparknode.triggers.gpio_interrupt import GpioInterrupt
+            if esparknode.configs.ENVIRONMENT == 'esp32':
+                # pylint: disable=import-error,import-outside-toplevel
+                from esparknode.triggers.gpio_interrupt import GpioInterrupt
 
-                    if (trigger.get_name() == DOOR_IN_NAME or trigger.get_name() == DOOR_OUT_NAME) and isinstance(trigger, GpioInterrupt):
-                        gpio_interrupt : GpioInterrupt = trigger
+                while True:
+                    for trigger in self.triggers:
+                        if isinstance(trigger, GpioInterrupt):
+                            gpio_interrupt     : GpioInterrupt = trigger
+                            mail_in_door_open  : bool          = True if gpio_interrupt.value(0) == 1 else False
+                            mail_out_door_open : bool          = True if gpio_interrupt.value(1) == 1 else False
 
-                        gpio_interrupt.wake_on(0)
+                            gpio_interrupt.start(0)
+                            gpio_interrupt.start(1)
 
-                        self.sleeper.deep_sleep(0)
+                            if mail_in_door_open or mail_out_door_open:
+                                self.watchdog.feed()
+
+                                sleep(5)
+                            else:
+                                gpio_interrupt.wake_on(1)
+
+                                self.sleeper.deep_sleep(24 * 60 * 60 * 1000)

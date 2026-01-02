@@ -10,7 +10,7 @@ class BaseTrigger:
     def get_name(self) -> str:
         return self.name
 
-    def get_value(self):
+    def value(self):
         raise NotImplementedError('get_value method must be implemented by subclasses.')
 
     def register_callback(self, callback):
