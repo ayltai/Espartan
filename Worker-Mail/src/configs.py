@@ -4,7 +4,7 @@ import esparknode.constants
 esparknode.constants.NODE_NAME    = 'Espartan-Mail'
 esparknode.constants.NODE_VERSION = '0.5.0'
 
-esparknode.configs.ENVIRONMENT = 'esp32'
+esparknode.configs.ENVIRONMENT = 'unix'
 
 CAPABILITY_MAIL : str = 'mail'
 

@@ -18,6 +18,7 @@
     "label_mail_status_outbox_closed"      : "Outbox closed",
     "label_door_sensor"                    : "Door sensor",
     "label_door_history"                   : "Door status history",
+    "label_door_status_motion_detected"    : "Motion detected",
     "label_door_status_closed"             : "Closed",
     "label_door_status_open"               : "Opened",
     "label_door_status_warning"            : "Opened for a while",

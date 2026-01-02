@@ -1,20 +1,18 @@
 import { MaterialCommunityIcons, } from '@expo/vector-icons';
-import { formatDistanceToNow, intlFormat, } from 'date-fns';
+import { compareAsc, formatDistanceToNow, intlFormat, } from 'date-fns';
+import { LinearGradient, } from 'expo-linear-gradient';
 import React, { useEffect, } from 'react';
-import { View, } from 'react-native';
+import { ScrollView, View, } from 'react-native';
 import { List, ProgressBar, Surface, Text, } from 'react-native-paper';
 
-import { useGetDeviceQuery, useGetHistoricalTelemetryQuery, useGetRecentTelemetryQuery, } from '../apis';
+import { useGetDeviceQuery, useGetHistoricalTelemetryQuery, } from '../apis';
 import { API_POLLING_INTERVAL_FAST, DEVICE_MAILBOX, } from '../constants';
 import { locale, t, } from '../i18n';
+import { capitaliseFirstLetter, } from '../utils/strings';
 import { handleError, } from '../utils';
 
 export const MailboxScreen = () => {
     const { data : deviceData, error : deviceError, } = useGetDeviceQuery(DEVICE_MAILBOX, {
-        pollingInterval : API_POLLING_INTERVAL_FAST,
-    });
-
-    const { data : telemetryData, error : telemetryError, } = useGetRecentTelemetryQuery(24 * 60 * 60, {
         pollingInterval : API_POLLING_INTERVAL_FAST,
     });
 
@@ -25,83 +23,105 @@ export const MailboxScreen = () => {
         pollingInterval : API_POLLING_INTERVAL_FAST,
     });
 
-    const status = telemetryData?.filter(item => item.deviceId === DEVICE_MAILBOX && item.dataType === 'mail')[0].value;
+    const lastInboxOpenedData  = historyData?.find(item => item.value === 100);
+    const lastOutboxOpenedData = historyData?.find(item => item.value === 200);
+
+    console.log('lastInboxOpenedData', lastInboxOpenedData);
+    console.log('lastOutboxOpenedData', lastOutboxOpenedData);
+
+    const status = compareAsc(lastInboxOpenedData ? new Date(lastInboxOpenedData.timestamp) : new Date(0), lastOutboxOpenedData ? new Date(lastOutboxOpenedData.timestamp) : new Date(0));
+
+    console.log('status', status);
 
     useEffect(() => {
         if (deviceError) handleError(deviceError);
     }, [ deviceError, ]);
 
     useEffect(() => {
-        if (telemetryError) handleError(telemetryError);
-    }, [ telemetryError, ]);
-
-    useEffect(() => {
         if (historyError) handleError(historyError);
     }, [ historyError, ]);
 
     return (
-        <View style={{
-            width         : '100%',
-            display       : 'flex',
-            flex          : 1,
-            flexDirection : 'column',
+        <ScrollView contentContainerStyle={{
+            flexGrow : 1,
         }}>
-            {deviceData && (
-                <>
+            <View style={{
+                width         : '100%',
+                display       : 'flex',
+                flex          : 1,
+                flexDirection : 'column',
+            }}>
+                {deviceData && (
+                    <>
+                        <LinearGradient
+                            style={{
+                                minHeight      : 200,
+                                alignItems     : 'center',
+                                justifyContent : 'center',
+                                flex           : 1,
+                                flexDirection  : 'column',
+                            }}
+                            colors={status === -1 ? [
+                                '#c8e6c9',
+                                '#81c784',
+                            ] : status === 1 ? [
+                                '#fff9c4',
+                                '#fff176',
+                            ] : [
+                                '#f8bbd0',
+                                '#f06292',
+                            ]}>
+                            <Text variant='headlineLarge'>
+                                {t(status === -1 ? 'label_mail_status_empty' : status === 1 ? 'label_mail_status_new_mail' : 'label_mail_status_unknown')}
+                            </Text>
+                            <View style={{
+                                height : 16,
+                            }} />
+                            <MaterialCommunityIcons
+                                name={status === -1 ? 'email-off-outline' : status === 1 ? 'email-multiple' : 'email-alert-outline'}
+                                size={100} />
+                        </LinearGradient>
+                        <Surface
+                            style={{
+                                flexGrow : 1,
+                            }}
+                            mode='flat'>
+                            <List.Section>
+                                {historyData && (
+                                    <List.Accordion title={t('label_mail_history')}>
+                                        {historyData.map(item => (
+                                            <List.Item
+                                                key={item.id}
+                                                title={item.value === 100 ? t('label_mail_status_inbox_opened') : item.value === -100 ? t('label_mail_status_inbox_closed') : item.value === 200 ? t('label_mail_status_outbox_opened') : item.value === -200 ? t('label_mail_status_outbox_closed') : t('label_mail_status_unknown')}
+                                                description={`${capitaliseFirstLetter(formatDistanceToNow(new Date(item.timestamp), {
+                                                    addSuffix : true,
+                                                }))} • ${intlFormat(item.timestamp, {
+                                                    dateStyle : 'medium',
+                                                    timeStyle : 'medium',
+                                                }, {
+                                                    locale,
+                                                })}`} />
+                                        ))}
+                                    </List.Accordion>
+                                )}
+                            </List.Section>
+                        </Surface>
+                    </>
+                )}
+                {!deviceData && (
                     <View style={{
-                        height         : 200,
+                        flexGrow       : 1,
                         alignItems     : 'center',
                         justifyContent : 'center',
-                        flex           : 1,
-                        flexDirection  : 'column',
                     }}>
-                        <Text variant='headlineLarge'>
-                            {t(status === 100 || status === -100 ? 'label_mail_status_new_mail' : status === 200 || status === -200 ? 'label_mail_status_empty' : 'label_mail_status_unknown')}
-                        </Text>
-                        <MaterialCommunityIcons
-                            name={status === 100 || status === -100 ? 'email-multiple' : status === 200 || status === -200 ? 'email-off' : 'email-alert-outline'}
-                            size={100} />
+                        <ProgressBar
+                            indeterminate
+                            style={{
+                                width : '80%',
+                            }} />
                     </View>
-                    <Surface
-                        style={{
-                            flexGrow : 1,
-                        }}
-                        mode='flat'>
-                        <List.Section>
-                            {historyData && (
-                                <List.Accordion title={t('label_mail_history')}>
-                                    {historyData.map(item => (
-                                        <List.Item
-                                            key={item.id}
-                                            title={item.value === 100 ? t('label_mail_status_inbox_opened') : item.value === -100 ? 'label_mail_status_inbox_closed' : item.value === 200 ? t('label_mail_status_outbox_opened') : item.value === -200 ? t('label_mail_status_outbox_closed') : t('label_mail_status_unknown')}
-                                            description={`${formatDistanceToNow(new Date(item.timestamp), {
-                                                addSuffix : true,
-                                            })} • ${intlFormat(item.timestamp, {
-                                                dateStyle : 'medium',
-                                                timeStyle : 'medium',
-                                            }, {
-                                                locale,
-                                            })}`} />
-                                    ))}
-                                </List.Accordion>
-                            )}
-                        </List.Section>
-                    </Surface>
-                </>
-            )}
-            {!deviceData && (
-                <View style={{
-                    flexGrow       : 1,
-                    alignItems     : 'center',
-                    justifyContent : 'center',
-                }}>
-                    <ProgressBar
-                        indeterminate
-                        style={{
-                            width : '80%',
-                        }} />
-                </View>
-            )}
-        </View>
+                )}
+            </View>
+        </ScrollView>
     );
 };

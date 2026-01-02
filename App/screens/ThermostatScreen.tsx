@@ -1,6 +1,7 @@
 import { FontAwesome6, } from '@expo/vector-icons';
+import { LinearGradient, } from 'expo-linear-gradient';
 import React, { useEffect, useMemo, } from 'react';
-import { View, } from 'react-native';
+import { ScrollView, View, } from 'react-native';
 import { AnimatedCircularProgress, } from 'react-native-circular-progress';
 import { Divider, IconButton, SegmentedButtons, Text, } from 'react-native-paper';
 
@@ -118,254 +119,352 @@ export const ThermostatScreen = () => {
     }, [ currentStateError, ]);
 
     return (
-        <View style={{
-            width          : '100%',
-            display        : 'flex',
-            flexDirection  : 'column',
-            alignItems     : 'center',
-            justifyContent : 'center',
+        <ScrollView contentContainerStyle={{
+            flexGrow : 1,
         }}>
             <View style={{
                 width          : '100%',
-                height         : 200,
                 display        : 'flex',
+                flexDirection  : 'column',
                 alignItems     : 'center',
                 justifyContent : 'center',
             }}>
-                {configurationsData && (
-                    <>
-                        <AnimatedCircularProgress
-                            size={180}
-                            width={16}
-                            tintColor={currentTemperature < configurationsData.thresholdOn - 0.5 ? '#fbc02d' : currentTemperature > configurationsData.thresholdOff + 0.5 ? '#d32f2f' : '#388e3c'}
-                            backgroundWidth={2}
-                            backgroundColor='#607d8b'
-                            arcSweepAngle={240}
-                            rotation={240}
-                            lineCap='round'
-                            fill={(currentTemperature / 100.0 - HEATING_TEMPERATURE_MIN) / (HEATING_TEMPERATURE_MAX - HEATING_TEMPERATURE_MIN) * 100} />
-                        <Text
-                            style={{
-                                top       : '50%',
-                                left      : '50%',
-                                position  : 'absolute',
-                                transform : [
-                                    {
-                                        translateX : '-50%',
-                                    }, {
-                                        translateY : '-50%',
-                                    },
-                                ],
-                                textAlign : 'center',
-                                width     : '100%',
-                            }}
-                            variant='headlineMedium'>
-                            {currentTemperature ? (currentTemperature / 100.0).toFixed(1) : '-'}°C
-                        </Text>
-                        <Text
-                            style={{
-                                width          : '100%',
-                                left           : -32,
-                                top            : 40,
-                                display        : 'flex',
-                                flexDirection  : 'row',
-                                justifyContent : 'center',
-                                position       : 'absolute',
-                            }}
-                            variant='bodySmall'>
-                            15°C
-                        </Text>
-                        <Text
-                            style={{
-                                width          : '100%',
-                                left           : 32,
-                                top            : 40,
-                                display        : 'flex',
-                                flexDirection  : 'row',
-                                justifyContent : 'center',
-                                position       : 'absolute',
-                            }}
-                            variant='bodySmall'>
-                            20°C
-                        </Text>
-                        <Text
-                            style={{
-                                width          : '100%',
-                                left           : -48,
-                                top            : 140,
-                                display        : 'flex',
-                                flexDirection  : 'row',
-                                justifyContent : 'center',
-                                position       : 'absolute',
-                            }}
-                            variant='bodySmall'>
-                            5°C
-                        </Text>
-                        <Text
-                            style={{
-                                width          : '100%',
-                                left           : 48,
-                                top            : 140,
-                                display        : 'flex',
-                                flexDirection  : 'row',
-                                justifyContent : 'center',
-                                position       : 'absolute',
-                            }}
-                            variant='bodySmall'>
-                            30°C
-                        </Text>
-                    </>
-                )}
-            </View>
-            <View style={{
-                display       : 'flex',
-                flexDirection : 'column',
-                flexGrow      : 1,
-                alignItems    : 'center',
-            }}>
-                <View style={{
-                    marginBottom   : 8,
-                    display        : 'flex',
-                    flexDirection  : 'row',
-                    alignItems     : 'center',
-                    justifyContent : 'center',
-                }}>
-                    <FontAwesome6
-                        name='fire-flame-curved'
-                        size={32}
-                        color={currentStateData === 1 ? '#d32f2f' : '#546e7a'} />
-                    &nbsp;
-                    <Text
-                        style={{
-                            color : currentStateData === 1 ? '#d32f2f' : '#546e7a',
-                        }}
-                        variant='headlineSmall'>
-                        {currentStateData === 1 ? t('label_thermo_status_on') : t('label_thermo_status_off')}
-                    </Text>
-                </View>
-                <Divider />
-                {devicesData && devicesData.filter(device => device.capabilities && device.capabilities.indexOf('temperature') >= 0).slice().sort((a, b) => {
-                        const indexA = a.displayName ? ORDER.indexOf(a.displayName) : -1;
-                        const indexB = b.displayName ? ORDER.indexOf(b.displayName) : -1;
-
-                        if (indexA === -1 && indexB === -1) return devicesData.indexOf(a) - devicesData.indexOf(b);
-
-                        if (indexA === -1) return 1;
-                        if (indexB === -1) return -1;
-
-                        return indexA - indexB;
-                    }).map(device => (
-                        <View
-                            key={device.id}
-                            style={{
-                                width          : '100%',
-                                display        : 'flex',
-                                flexDirection  : 'row',
-                                justifyContent : 'space-between',
-                            }}>
-                            <Text
-                                style={{
-                                    marginRight : 8,
-                                    flexGrow    : 1,
-                                }}
-                                variant='bodyMedium'>
-                                {device.displayName}
-                            </Text>
-                            <Text
-                                style={{
-                                    width          : 64,
-                                    display        : 'flex',
-                                    flexDirection  : 'row',
-                                    justifyContent : 'center',
-                                }}
-                                variant='bodyMedium'>
-                                <FontAwesome6
-                                    name='temperature-low'
-                                    size={14} />
-                                &nbsp;
-                                {(telemetryData && telemetryData.filter(telemetry => telemetry.deviceId === device.id && telemetry.dataType === 'temperature')?.map(telemetry => telemetry.value / 100.0)[0]?.toFixed(1)) ?? '-'}°C
-                            </Text>
-                            <Text
-                                style={{
-                                    width          : 64,
-                                    display        : 'flex',
-                                    flexDirection  : 'row',
-                                    justifyContent : 'center',
-                                }}
-                                variant='bodyMedium'>
-                                <FontAwesome6
-                                    name='droplet'
-                                    size={14} />
-                                &nbsp;
-                                {(telemetryData && telemetryData.filter(telemetry => telemetry.deviceId === device.id && telemetry.dataType === 'humidity')?.map(telemetry => telemetry.value / 100.0)[0]?.toFixed(0)) ?? '-'}%
-                            </Text>
-                        </View>
-                    ))}
-                <Divider />
-                {configurationsData && (
+                <LinearGradient
+                    style={{
+                        width          : '100%',
+                        minHeight      : 200,
+                        paddingTop     : 32,
+                        display        : 'flex',
+                        alignItems     : 'center',
+                        justifyContent : 'center',
+                    }}
+                    colors={currentTemperature < 1500 ? [
+                        '#bbdefb',
+                        '#64b5f6',
+                    ] : currentTemperature > 2500 ? [
+                        '#ffccbc',
+                        '#ff8a65',
+                    ] : [
+                        '#c8e6c9',
+                        '#81c784',
+                    ]}>
+                    {configurationsData && (
                         <>
-                            <View style={{
-                                width          : '100%',
-                                display        : 'flex',
-                                flexDirection  : 'row',
-                                alignItems     : 'center',
-                                justifyContent : 'center',
-                            }}>
-                                <IconButton
-                                    disabled={isUpdatingConfigurations || configurationsData.thresholdOn <= HEATING_TEMPERATURE_MIN}
-                                    size={32}
-                                    icon='arrow-down-drop-circle-outline'
-                                    onPress={handleDecrementThreshold} />
-                                <View
-                                    style={{
-                                        display        : 'flex',
-                                        flexDirection  : 'column',
-                                        alignItems     : 'center',
-                                        justifyContent : 'center',
-                                    }}>
-                                    <Text variant='bodyMedium'>
-                                        {t('label_thermo_target')}
-                                    </Text>
-                                    <Text variant='titleMedium'>
-                                        {(configurationsData.thresholdOn + 0.5).toFixed(1)} °C
-                                    </Text>
-                                </View>
-                                <IconButton
-                                    disabled={isUpdatingConfigurations || configurationsData.thresholdOn >= HEATING_TEMPERATURE_MAX}
-                                    size={32}
-                                    icon='arrow-up-drop-circle-outline'
-                                    onPress={handleIncrementThreshold} />
-                            </View>
-                            <View style={{
-                                width          : '100%',
-                                display        : 'flex',
-                                flexDirection  : 'row',
-                                alignItems     : 'center',
-                                justifyContent : 'center',
-                            }}>
-                                <Text variant='bodyMedium'>
-                                    {t('label_thermo_decision_strategy')}
-                                </Text>
-                                &nbsp;
-                                <SegmentedButtons
-                                    density='small'
-                                    buttons={[
+                            <AnimatedCircularProgress
+                                size={180}
+                                width={16}
+                                tintColor={currentTemperature < configurationsData.thresholdOn - 0.5 ? '#fbc02d' : currentTemperature > configurationsData.thresholdOff + 0.5 ? '#d32f2f' : '#388e3c'}
+                                backgroundWidth={2}
+                                backgroundColor='#607d8b'
+                                arcSweepAngle={240}
+                                rotation={240}
+                                lineCap='round'
+                                fill={(currentTemperature / 100.0 - HEATING_TEMPERATURE_MIN) / (HEATING_TEMPERATURE_MAX - HEATING_TEMPERATURE_MIN) * 100} />
+                            <Text
+                                style={{
+                                    width     : '100%',
+                                    top       : '50%',
+                                    left      : '50%',
+                                    position  : 'absolute',
+                                    transform : [
                                         {
-                                            disabled : isUpdatingConfigurations,
-                                            label    : t('label_thermo_decision_strategies_min'),
-                                            value    : 'min',
+                                            translateX : '-50%',
                                         }, {
-                                            disabled : isUpdatingConfigurations,
-                                            label    : t('label_thermo_decision_strategies_avg'),
-                                            value    : 'avg',
+                                            translateX : 4,
+                                        }, {
+                                            translateY : '-50%',
+                                        }, {
+                                            translateY : 48,
                                         },
-                                    ]}
-                                    value={configurationsData.decisionStrategy}
-                                    onValueChange={handleStrategyChange} />
-                            </View>
+                                    ],
+                                    textAlign : 'center',
+                                }}
+                                variant='headlineMedium'>
+                                {currentTemperature ? (currentTemperature / 100.0).toFixed(1) : '-'}°C
+                            </Text>
+                            <Text
+                                style={{
+                                    transform      : [
+                                        {
+                                            translateX : '-50%',
+                                        }, {
+                                            translateX : -8,
+                                        }, {
+                                            translateY : '-50%',
+                                        }, {
+                                            translateY : -32,
+                                        },
+                                    ],
+                                    display        : 'flex',
+                                    flexDirection  : 'row',
+                                    justifyContent : 'center',
+                                    position       : 'absolute',
+                                }}
+                                variant='bodySmall'>
+                                15°C
+                            </Text>
+                            <Text
+                                style={{
+                                    transform      : [
+                                        {
+                                            translateX : '-50%',
+                                        }, {
+                                            translateX : 48,
+                                        }, {
+                                            translateY : '-50%',
+                                        }, {
+                                            translateY : -32,
+                                        },
+                                    ],
+                                    display        : 'flex',
+                                    flexDirection  : 'row',
+                                    justifyContent : 'center',
+                                    position       : 'absolute',
+                                }}
+                                variant='bodySmall'>
+                                20°C
+                            </Text>
+                            <Text
+                                style={{
+                                    transform      : [
+                                        {
+                                            translateX : '-50%',
+                                        }, {
+                                            translateX : -40,
+                                        }, {
+                                            translateY : '-50%',
+                                        }, {
+                                            translateY : 8,
+                                        },
+                                    ],
+                                    display        : 'flex',
+                                    flexDirection  : 'row',
+                                    justifyContent : 'center',
+                                    position       : 'absolute',
+                                }}
+                                variant='bodySmall'>
+                                10°C
+                            </Text>
+                            <Text
+                                style={{
+                                    transform      : [
+                                        {
+                                            translateX : '-50%',
+                                        }, {
+                                            translateX : 76,
+                                        }, {
+                                            translateY : '-50%',
+                                        }, {
+                                            translateY : 8,
+                                        },
+                                    ],
+                                    display        : 'flex',
+                                    flexDirection  : 'row',
+                                    justifyContent : 'center',
+                                    position       : 'absolute',
+                                }}
+                                variant='bodySmall'>
+                                25°C
+                            </Text>
+                            <Text
+                                style={{
+                                    transform      : [
+                                        {
+                                            translateX : '-50%',
+                                        }, {
+                                            translateX : -32,
+                                        }, {
+                                            translateY : '-50%',
+                                        }, {
+                                            translateY : 72,
+                                        },
+                                    ],
+                                    display        : 'flex',
+                                    flexDirection  : 'row',
+                                    justifyContent : 'center',
+                                    position       : 'absolute',
+                                }}
+                                variant='bodySmall'>
+                                5°C
+                            </Text>
+                            <Text
+                                style={{
+                                    transform      : [
+                                        {
+                                            translateX : '-50%',
+                                        }, {
+                                            translateX : 64,
+                                        }, {
+                                            translateY : '-50%',
+                                        }, {
+                                            translateY : 72,
+                                        },
+                                    ],
+                                    display        : 'flex',
+                                    flexDirection  : 'row',
+                                    justifyContent : 'center',
+                                    position       : 'absolute',
+                                }}
+                                variant='bodySmall'>
+                                30°C
+                            </Text>
                         </>
                     )}
+                </LinearGradient>
+                <View style={{
+                    paddingTop    : 16,
+                    display       : 'flex',
+                    flexDirection : 'column',
+                    flexGrow      : 1,
+                    alignItems    : 'center',
+                }}>
+                    <View style={{
+                        marginBottom   : 8,
+                        display        : 'flex',
+                        flexDirection  : 'row',
+                        alignItems     : 'center',
+                        justifyContent : 'center',
+                    }}>
+                        <FontAwesome6
+                            name='fire-flame-curved'
+                            size={32}
+                            color={currentStateData === 1 ? '#d32f2f' : '#546e7a'} />
+                        &nbsp;
+                        <Text
+                            style={{
+                                color : currentStateData === 1 ? '#d32f2f' : '#546e7a',
+                            }}
+                            variant='headlineSmall'>
+                            {currentStateData === 1 ? t('label_thermo_status_on') : t('label_thermo_status_off')}
+                        </Text>
+                    </View>
+                    <Divider />
+                    {devicesData && devicesData.filter(device => device.capabilities && device.capabilities.indexOf('temperature') >= 0).slice().sort((a, b) => {
+                            const indexA = a.displayName ? ORDER.indexOf(a.displayName) : -1;
+                            const indexB = b.displayName ? ORDER.indexOf(b.displayName) : -1;
+
+                            if (indexA === -1 && indexB === -1) return devicesData.indexOf(a) - devicesData.indexOf(b);
+
+                            if (indexA === -1) return 1;
+                            if (indexB === -1) return -1;
+
+                            return indexA - indexB;
+                        }).map(device => (
+                            <View
+                                key={device.id}
+                                style={{
+                                    width          : '100%',
+                                    paddingLeft    : 16,
+                                    display        : 'flex',
+                                    flexDirection  : 'row',
+                                    justifyContent : 'space-between',
+                                }}>
+                                <Text
+                                    style={{
+                                        marginRight : 8,
+                                        flexGrow    : 1,
+                                    }}
+                                    variant='bodyMedium'>
+                                    {device.displayName}
+                                </Text>
+                                <Text
+                                    style={{
+                                        width          : 64,
+                                        display        : 'flex',
+                                        flexDirection  : 'row',
+                                        justifyContent : 'center',
+                                    }}
+                                    variant='bodyMedium'>
+                                    <FontAwesome6
+                                        name='temperature-low'
+                                        size={14} />
+                                    &nbsp;
+                                    {(telemetryData && telemetryData.filter(telemetry => telemetry.deviceId === device.id && telemetry.dataType === 'temperature')?.map(telemetry => telemetry.value / 100.0)[0]?.toFixed(1)) ?? '-'}°C
+                                </Text>
+                                <Text
+                                    style={{
+                                        width          : 64,
+                                        display        : 'flex',
+                                        flexDirection  : 'row',
+                                        justifyContent : 'center',
+                                    }}
+                                    variant='bodyMedium'>
+                                    <FontAwesome6
+                                        name='droplet'
+                                        size={14} />
+                                    &nbsp;
+                                    {(telemetryData && telemetryData.filter(telemetry => telemetry.deviceId === device.id && telemetry.dataType === 'humidity')?.map(telemetry => telemetry.value / 100.0)[0]?.toFixed(0)) ?? '-'}%
+                                </Text>
+                            </View>
+                        ))}
+                    <Divider />
+                    {configurationsData && (
+                            <>
+                                <View style={{
+                                    width          : '50%',
+                                    display        : 'flex',
+                                    flexDirection  : 'row',
+                                    alignItems     : 'center',
+                                    justifyContent : 'center',
+                                }}>
+                                    <IconButton
+                                        disabled={isUpdatingConfigurations || configurationsData.thresholdOn <= HEATING_TEMPERATURE_MIN}
+                                        size={32}
+                                        icon='arrow-down-drop-circle-outline'
+                                        onPress={handleDecrementThreshold} />
+                                    <View
+                                        style={{
+                                            display        : 'flex',
+                                            flexDirection  : 'column',
+                                            alignItems     : 'center',
+                                            justifyContent : 'center',
+                                        }}>
+                                        <Text variant='bodyMedium'>
+                                            {t('label_thermo_target')}
+                                        </Text>
+                                        <Text variant='titleMedium'>
+                                            {(configurationsData.thresholdOn + 0.5).toFixed(1)} °C
+                                        </Text>
+                                    </View>
+                                    <IconButton
+                                        disabled={isUpdatingConfigurations || configurationsData.thresholdOn >= HEATING_TEMPERATURE_MAX}
+                                        size={32}
+                                        icon='arrow-up-drop-circle-outline'
+                                        onPress={handleIncrementThreshold} />
+                                </View>
+                                <View style={{
+                                    width          : '50%',
+                                    display        : 'flex',
+                                    flexDirection  : 'row',
+                                    alignItems     : 'center',
+                                    justifyContent : 'center',
+                                }}>
+                                    <Text variant='bodyMedium'>
+                                        {t('label_thermo_decision_strategy')}
+                                    </Text>
+                                    <View style={{
+                                        width : 8,
+                                    }} />
+                                    <SegmentedButtons
+                                        density='small'
+                                        buttons={[
+                                            {
+                                                disabled : isUpdatingConfigurations,
+                                                label    : t('label_thermo_decision_strategies_min'),
+                                                value    : 'min',
+                                            }, {
+                                                disabled : isUpdatingConfigurations,
+                                                label    : t('label_thermo_decision_strategies_avg'),
+                                                value    : 'avg',
+                                            },
+                                        ]}
+                                        value={configurationsData.decisionStrategy}
+                                        onValueChange={handleStrategyChange} />
+                                </View>
+                            </>
+                        )}
+                </View>
             </View>
-        </View>
+        </ScrollView>
     );
 };

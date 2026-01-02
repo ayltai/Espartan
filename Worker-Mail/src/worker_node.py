@@ -12,7 +12,6 @@ from esparknode.sensors.base_sensor import BaseSensor
 from esparknode.triggers.base_trigger import BaseTrigger
 from esparknode.utils.base_sleeper import BaseSleeper
 from esparknode.utils.base_watchdog import BaseWatchdog
-from esparknode.utils.logging import log_debug
 
 from src.configs import CAPABILITY_MAIL
 
@@ -68,8 +67,8 @@ class WorkerNode(BaseNode):
 
                     if isinstance(trigger, GpioInterrupt):
                         gpio_interrupt     : GpioInterrupt = trigger
-                        mail_in_door_open  : bool          = True if gpio_interrupt.value(0) == 1 else False
-                        mail_out_door_open : bool          = True if gpio_interrupt.value(1) == 1 else False
+                        mail_in_door_open  : bool          = gpio_interrupt.value(0) == 1
+                        mail_out_door_open : bool          = gpio_interrupt.value(1) == 1
 
                         self._on_triggered(mail_in_door_open, trigger, 0)
                         self._on_triggered(mail_out_door_open, trigger, 1)
@@ -86,8 +85,8 @@ class WorkerNode(BaseNode):
                     for trigger in self.triggers:
                         if isinstance(trigger, GpioInterrupt):
                             gpio_interrupt     : GpioInterrupt = trigger
-                            mail_in_door_open  : bool          = True if gpio_interrupt.value(0) == 1 else False
-                            mail_out_door_open : bool          = True if gpio_interrupt.value(1) == 1 else False
+                            mail_in_door_open  : bool          = gpio_interrupt.value(0) == 1
+                            mail_out_door_open : bool          = gpio_interrupt.value(1) == 1
 
                             gpio_interrupt.start(0)
                             gpio_interrupt.start(1)
