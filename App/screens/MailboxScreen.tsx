@@ -26,12 +26,7 @@ export const MailboxScreen = () => {
     const lastInboxOpenedData  = historyData?.find(item => item.value === 100);
     const lastOutboxOpenedData = historyData?.find(item => item.value === 200);
 
-    console.log('lastInboxOpenedData', lastInboxOpenedData);
-    console.log('lastOutboxOpenedData', lastOutboxOpenedData);
-
     const status = compareAsc(lastInboxOpenedData ? new Date(lastInboxOpenedData.timestamp) : new Date(0), lastOutboxOpenedData ? new Date(lastOutboxOpenedData.timestamp) : new Date(0));
-
-    console.log('status', status);
 
     useEffect(() => {
         if (deviceError) handleError(deviceError);
@@ -48,22 +43,20 @@ export const MailboxScreen = () => {
             <View style={{
                 width         : '100%',
                 display       : 'flex',
-                flex          : 1,
                 flexDirection : 'column',
             }}>
                 {deviceData && (
                     <>
                         <LinearGradient
                             style={{
-                                minHeight      : 200,
+                                minHeight      : 212,
                                 alignItems     : 'center',
                                 justifyContent : 'center',
-                                flex           : 1,
                                 flexDirection  : 'column',
                             }}
                             colors={status === -1 ? [
-                                '#c8e6c9',
-                                '#81c784',
+                                '#b2dfdb',
+                                '#4db6ac',
                             ] : status === 1 ? [
                                 '#fff9c4',
                                 '#fff176',

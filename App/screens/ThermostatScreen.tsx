@@ -2,10 +2,10 @@ import { FontAwesome6, } from '@expo/vector-icons';
 import { LinearGradient, } from 'expo-linear-gradient';
 import React, { useEffect, useMemo, } from 'react';
 import { ScrollView, View, } from 'react-native';
-import { AnimatedCircularProgress, } from 'react-native-circular-progress';
 import { Divider, IconButton, SegmentedButtons, Text, } from 'react-native-paper';
 
 import { useGetConfigurationsQuery, useGetCurrentStateQuery, useGetDevicesQuery, useGetRecentTelemetryQuery, useSetConfigurationsMutation, } from '../apis';
+import { Gauge, } from '../components';
 import { API_POLLING_INTERVAL_SLOW, HEATING_TEMPERATURE_MAX, HEATING_TEMPERATURE_MIN, } from '../constants';
 import { t, } from '../i18n';
 import { handleError, } from '../utils';
@@ -149,166 +149,10 @@ export const ThermostatScreen = () => {
                         '#81c784',
                     ]}>
                     {configurationsData && (
-                        <>
-                            <AnimatedCircularProgress
-                                size={180}
-                                width={16}
-                                tintColor={currentTemperature < configurationsData.thresholdOn - 0.5 ? '#fbc02d' : currentTemperature > configurationsData.thresholdOff + 0.5 ? '#d32f2f' : '#388e3c'}
-                                backgroundWidth={2}
-                                backgroundColor='#607d8b'
-                                arcSweepAngle={240}
-                                rotation={240}
-                                lineCap='round'
-                                fill={(currentTemperature / 100.0 - HEATING_TEMPERATURE_MIN) / (HEATING_TEMPERATURE_MAX - HEATING_TEMPERATURE_MIN) * 100} />
-                            <Text
-                                style={{
-                                    width     : '100%',
-                                    top       : '50%',
-                                    left      : '50%',
-                                    position  : 'absolute',
-                                    transform : [
-                                        {
-                                            translateX : '-50%',
-                                        }, {
-                                            translateX : 4,
-                                        }, {
-                                            translateY : '-50%',
-                                        }, {
-                                            translateY : 48,
-                                        },
-                                    ],
-                                    textAlign : 'center',
-                                }}
-                                variant='headlineMedium'>
-                                {currentTemperature ? (currentTemperature / 100.0).toFixed(1) : '-'}°C
-                            </Text>
-                            <Text
-                                style={{
-                                    transform      : [
-                                        {
-                                            translateX : '-50%',
-                                        }, {
-                                            translateX : -8,
-                                        }, {
-                                            translateY : '-50%',
-                                        }, {
-                                            translateY : -32,
-                                        },
-                                    ],
-                                    display        : 'flex',
-                                    flexDirection  : 'row',
-                                    justifyContent : 'center',
-                                    position       : 'absolute',
-                                }}
-                                variant='bodySmall'>
-                                15°C
-                            </Text>
-                            <Text
-                                style={{
-                                    transform      : [
-                                        {
-                                            translateX : '-50%',
-                                        }, {
-                                            translateX : 48,
-                                        }, {
-                                            translateY : '-50%',
-                                        }, {
-                                            translateY : -32,
-                                        },
-                                    ],
-                                    display        : 'flex',
-                                    flexDirection  : 'row',
-                                    justifyContent : 'center',
-                                    position       : 'absolute',
-                                }}
-                                variant='bodySmall'>
-                                20°C
-                            </Text>
-                            <Text
-                                style={{
-                                    transform      : [
-                                        {
-                                            translateX : '-50%',
-                                        }, {
-                                            translateX : -40,
-                                        }, {
-                                            translateY : '-50%',
-                                        }, {
-                                            translateY : 8,
-                                        },
-                                    ],
-                                    display        : 'flex',
-                                    flexDirection  : 'row',
-                                    justifyContent : 'center',
-                                    position       : 'absolute',
-                                }}
-                                variant='bodySmall'>
-                                10°C
-                            </Text>
-                            <Text
-                                style={{
-                                    transform      : [
-                                        {
-                                            translateX : '-50%',
-                                        }, {
-                                            translateX : 76,
-                                        }, {
-                                            translateY : '-50%',
-                                        }, {
-                                            translateY : 8,
-                                        },
-                                    ],
-                                    display        : 'flex',
-                                    flexDirection  : 'row',
-                                    justifyContent : 'center',
-                                    position       : 'absolute',
-                                }}
-                                variant='bodySmall'>
-                                25°C
-                            </Text>
-                            <Text
-                                style={{
-                                    transform      : [
-                                        {
-                                            translateX : '-50%',
-                                        }, {
-                                            translateX : -32,
-                                        }, {
-                                            translateY : '-50%',
-                                        }, {
-                                            translateY : 72,
-                                        },
-                                    ],
-                                    display        : 'flex',
-                                    flexDirection  : 'row',
-                                    justifyContent : 'center',
-                                    position       : 'absolute',
-                                }}
-                                variant='bodySmall'>
-                                5°C
-                            </Text>
-                            <Text
-                                style={{
-                                    transform      : [
-                                        {
-                                            translateX : '-50%',
-                                        }, {
-                                            translateX : 64,
-                                        }, {
-                                            translateY : '-50%',
-                                        }, {
-                                            translateY : 72,
-                                        },
-                                    ],
-                                    display        : 'flex',
-                                    flexDirection  : 'row',
-                                    justifyContent : 'center',
-                                    position       : 'absolute',
-                                }}
-                                variant='bodySmall'>
-                                30°C
-                            </Text>
-                        </>
+                        <Gauge
+                            currentTemperature={currentTemperature}
+                            thresholdOn={configurationsData.thresholdOn}
+                            thresholdOff={configurationsData.thresholdOff} />
                     )}
                 </LinearGradient>
                 <View style={{
@@ -329,7 +173,9 @@ export const ThermostatScreen = () => {
                             name='fire-flame-curved'
                             size={32}
                             color={currentStateData === 1 ? '#d32f2f' : '#546e7a'} />
-                        &nbsp;
+                        <View style={{
+                            width : 8,
+                        }} />
                         <Text
                             style={{
                                 color : currentStateData === 1 ? '#d32f2f' : '#546e7a',
@@ -369,7 +215,7 @@ export const ThermostatScreen = () => {
                                 </Text>
                                 <Text
                                     style={{
-                                        width          : 64,
+                                        minWidth       : 72,
                                         display        : 'flex',
                                         flexDirection  : 'row',
                                         justifyContent : 'center',
@@ -383,7 +229,7 @@ export const ThermostatScreen = () => {
                                 </Text>
                                 <Text
                                     style={{
-                                        width          : 64,
+                                        minWidth       : 64,
                                         display        : 'flex',
                                         flexDirection  : 'row',
                                         justifyContent : 'center',

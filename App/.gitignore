@@ -9,8 +9,6 @@ coverage/
 
 # Expo
 .expo/
-dist/
-web-build/
 expo-env.d.ts
 
 # local env files

@@ -4,7 +4,7 @@ import esparknode.constants
 esparknode.constants.NODE_NAME    = 'Espartan-Thermo'
 esparknode.constants.NODE_VERSION = '0.5.1'
 
-esparknode.configs.ENVIRONMENT = 'esp32'
+esparknode.configs.ENVIRONMENT = 'unix'
 
 MODE = 'actuator'
 # MODE = 'sensor'
@@ -54,7 +54,7 @@ VOLTAGE_PIN     : int = 1
 RELAY_SET_PIN   : int = 2
 RELAY_RESET_PIN : int = 3
 
-VOLTAGE_FULL  : float = 3 * 1.3
-VOLTAGE_EMPTY : float = 3 * 1.1
+VOLTAGE_FULL  : float = 3 * 1.375
+VOLTAGE_EMPTY : float = 3 * 1.15
 
 VOLTAGE_DIVIDER_RATIO : float = 5.0

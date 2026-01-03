@@ -70,10 +70,9 @@ export const FrontDoorScreen = () => {
                 }}>
                     <LinearGradient
                         style={{
-                            minHeight      : 200,
+                            minHeight      : 212,
                             alignItems     : 'center',
                             justifyContent : 'center',
-                            flex           : 1,
                             flexDirection  : 'column',
                         }}
                         colors={status === 100 ? [

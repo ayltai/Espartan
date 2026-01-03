@@ -17,13 +17,17 @@
     "license"         : "MIT",
     "main"            : "index.ts",
     "scripts"         : {
-        "clean"   : "pnpm dlx rimraf --glob **/node_modules/* pnpm-lock.yaml",
-        "reset"   : "pnpm clean && pnpm i && pnpm audit -P",
-        "test"    : "jest",
-        "start"   : "expo start",
-        "android" : "expo start --android",
-        "ios"     : "expo start --ios",
-        "web"     : "expo start --web"
+        "clean"          : "pnpm dlx rimraf --glob **/node_modules/* pnpm-lock.yaml",
+        "reset"          : "pnpm clean && pnpm i && pnpm audit -P",
+        "test"           : "jest",
+        "start"          : "expo start",
+        "android"        : "expo start --android",
+        "ios"            : "expo start --ios",
+        "web"            : "expo start --web",
+        "docker:deploy"  : "pnpm docker:prune docker:build docker:publish",
+        "docker:build"   : "DOCKER_BUILDKIT=1 docker build --no-cache -t ayltai/geekylifehacks:espartan-app-0.5.0 .",
+        "docker:publish" : "docker push ayltai/geekylifehacks:espartan-app-0.5.0",
+        "docker:prune"   : "docker image remove ayltai/geekylifehacks:espartan-app-0.5.0 || true && docker system prune -f"
     },
     "dependencies"    : {
         "@expo/vector-icons"             : "~15.0.3",

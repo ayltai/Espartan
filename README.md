@@ -31,6 +31,8 @@ Espartan is a central management portal for ESP32-based smart thermostats, open-
 
 ```
 Espartan/
+├── App/                # Mobile app (React Native)
+│
 ├── Master/
 │   ├── backend/           # FastAPI backend (Python)
 │   │   ├── src/

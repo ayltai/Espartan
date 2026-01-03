@@ -1,0 +1,16 @@
+# macOS
+.DS_Store
+
+# Git
+
+.git/
+
+# JetBrains IDEs
+.idea/
+
+# Dependencies
+node_modules/
+pnpm-lock.yaml
+
+# Testing
+coverage/
