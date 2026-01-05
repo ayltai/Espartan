@@ -10,7 +10,7 @@ RESOLUTION   : float = 65535.0
 
 class VoltageSensor(BaseSensor):
     def __init__(self, pin: int, voltage_full: float, voltage_empty: float, voltage_divider_ratio: float):
-        self.pin                   = ADC(Pin(pin))
+        self.pin                   = ADC(Pin(pin), atten=ADC.ATTN_11DB)
         self.voltage_full          = voltage_full
         self.voltage_empty         = voltage_empty
         self.voltage_divider_ratio = voltage_divider_ratio
