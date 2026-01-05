@@ -138,10 +138,10 @@ export const ThermostatScreen = () => {
                         alignItems     : 'center',
                         justifyContent : 'center',
                     }}
-                    colors={currentTemperature < 1500 ? [
+                    colors={currentTemperature < (configurationsData ? configurationsData.thresholdOn * 100 : 1600) ? [
                         '#bbdefb',
                         '#64b5f6',
-                    ] : currentTemperature > 2500 ? [
+                    ] : currentTemperature > (configurationsData ? configurationsData?.thresholdOff * 100 : 2000) ? [
                         '#ffccbc',
                         '#ff8a65',
                     ] : [
@@ -151,8 +151,8 @@ export const ThermostatScreen = () => {
                     {configurationsData && (
                         <Gauge
                             currentTemperature={currentTemperature}
-                            thresholdOn={configurationsData.thresholdOn}
-                            thresholdOff={configurationsData.thresholdOff} />
+                            thresholdOn={configurationsData.thresholdOn * 100}
+                            thresholdOff={configurationsData.thresholdOff * 100} />
                     )}
                 </LinearGradient>
                 <View style={{

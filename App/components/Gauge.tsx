@@ -19,7 +19,7 @@ export const Gauge = ({
         <AnimatedCircularProgress
             size={180}
             width={16}
-            tintColor={currentTemperature < thresholdOn - 0.5 ? '#fbc02d' : currentTemperature > thresholdOff + 0.5 ? '#d32f2f' : '#388e3c'}
+            tintColor={currentTemperature < thresholdOn ? '#fbc02d' : currentTemperature > thresholdOff + 0.5 ? '#d32f2f' : '#388e3c'}
             backgroundWidth={2}
             backgroundColor='#607d8b'
             arcSweepAngle={240}
