@@ -15,6 +15,7 @@ class AppConfig(BaseSettings):
     device_sleep_interval       : int = 600
     heating_evaluation_interval : int = 10
     heating_evaluation_strategy : str = 'min'
+    heating_min_temperature     : int = 16
     outbox_processing_interval  : int = 10
 
     model_config = SettingsConfigDict(

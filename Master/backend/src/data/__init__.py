@@ -10,8 +10,9 @@ from .repositories import SettingsRepository
 async def init_settings() -> None:
     async with async_session() as session:
         await ensure_settings(session)
-        await ensure_app(session, 'Espartan-Door', '0.4.8')
-        await ensure_app(session, 'Espartan-Thermo', '0.4.8')
+        await ensure_app(session, 'Espartan-Door', '0.5.0')
+        await ensure_app(session, 'Espartan-Mail', '0.5.0')
+        await ensure_app(session, 'Espartan-Thermo', '0.5.0')
 
         await session.commit()
 
