@@ -19,6 +19,7 @@ MQTT_TIMEOUT   : int = 20
 MQTT_KEEPALIVE : int = 60
 
 PARAMETERS_UPDATE_TIMEOUT : int = 20
+SENSOR_RETRIES            : int = 5
 
 LED_PIN : int = 8
 

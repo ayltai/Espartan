@@ -12,8 +12,9 @@ import { handleError, } from '../utils';
 
 const ORDER = [
     'Entrance',
-    'Living Room',
     'Kitchen',
+    'Living Room',
+    'Guest Room',
     'Harold',
     'Loft',
 ];

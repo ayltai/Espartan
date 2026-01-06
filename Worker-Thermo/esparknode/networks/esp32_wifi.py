@@ -1,5 +1,5 @@
 # pylint: disable=import-error
-from network import STA_IF, WLAN
+from network import WLAN
 # pylint: disable=wrong-import-order
 from time import sleep
 
@@ -14,7 +14,7 @@ class WiFiManager(BaseWiFiManager):
     def __init__(self, watchdog: BaseWatchdog, ssid: str, password: str) -> None:
         super().__init__(watchdog, ssid, password)
 
-        self.wlan = WLAN(STA_IF)
+        self.wlan = WLAN(WLAN.IF_STA)
 
     def ensure_wifi_on(self) -> bool:
         self.wlan.active(True)
@@ -25,6 +25,8 @@ class WiFiManager(BaseWiFiManager):
 
             timeout: int = 0
             while not self.wlan.isconnected() and timeout < TIMEOUT:
+                log_debug(f'WiFi status: {self.wlan.status()}')
+
                 self.watchdog.feed()
 
                 sleep(1)

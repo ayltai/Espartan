@@ -1,7 +1,7 @@
 from json import dumps
 from time import sleep, time
 
-from esparknode.configs import CAPABILITIES, ENVIRONMENT, PARAMETERS_UPDATE_TIMEOUT, UNUSED_PINS
+from esparknode.configs import CAPABILITIES, ENVIRONMENT, PARAMETERS_UPDATE_TIMEOUT, SENSOR_RETRIES, UNUSED_PINS
 from esparknode.constants import NODE_NAME, NODE_VERSION, TOPIC_ACTION, TOPIC_DEVICE, TOPIC_OTA, TOPIC_REGISTRATION, TOPIC_TELEMETRY
 from esparknode.networks.base_bluetooth import BaseBluetoothManager
 from esparknode.networks.base_mqtt import BaseMQTTManager
@@ -104,24 +104,30 @@ class BaseNode:
 
     def publish_telemetry(self):
         for sensor in self.sensors:
-            try:
-                telemetry = sensor.read()
-                if telemetry is not None:
-                    for data_type, value in telemetry.items():
-                        payload = {
-                            'device_id' : self.device_id,
-                            'data_type' : data_type,
-                            'value'     : round(value * 100),
-                        }
+            deadline = time() + SENSOR_RETRIES
+            while time() < deadline:
+                try:
+                    telemetry = sensor.read()
+                    if telemetry is not None:
+                        for data_type, value in telemetry.items():
+                            payload = {
+                                'device_id' : self.device_id,
+                                'data_type' : data_type,
+                                'value'     : round(value * 100),
+                            }
 
-                        log_debug(f'Publishing telemetry data for device {self.device_id}: {dumps(payload)}')
+                            log_debug(f'Publishing telemetry data for device {self.device_id}: {dumps(payload)}')
 
-                        self.mqtt_manager.publish(f'{TOPIC_TELEMETRY}/{self.device_id}', dumps(payload))
+                            self.mqtt_manager.publish(f'{TOPIC_TELEMETRY}/{self.device_id}', dumps(payload))
 
-                        self.watchdog.feed()
-            # pylint: disable=broad-exception-caught
-            except Exception as e:
-                log_debug(f'Error reading from sensor {sensor.__class__.__name__}: {e}')
+                            self.watchdog.feed()
+
+                    break
+                # pylint: disable=broad-exception-caught
+                except Exception as e:
+                    log_debug(f'Error reading from sensor {sensor.__class__.__name__}: {e}')
+
+                    sleep(1)
 
     def start(self) -> None:
         self.register()
