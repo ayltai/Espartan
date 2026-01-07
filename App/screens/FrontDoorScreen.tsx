@@ -58,51 +58,60 @@ export const FrontDoorScreen = () => {
     }, [ setDeviceError, ]);
 
     return (
-        <View style={{
-            width         : '100%',
-            display       : 'flex',
-            flex          : 1,
-            flexDirection : 'column',
+        <ScrollView contentContainerStyle={{
+            flexGrow : 1,
         }}>
+            <View style={{
+                width         : '100%',
+                display       : 'flex',
+                flexDirection : 'column',
+            }}>
             {deviceData && (
-                <ScrollView contentContainerStyle={{
-                    flexGrow : 1,
+                <View style={{
+                    width   : '100%',
+                    padding : 16,
                 }}>
-                    <LinearGradient
-                        style={{
-                            minHeight      : 212,
-                            alignItems     : 'center',
-                            justifyContent : 'center',
-                            flexDirection  : 'column',
-                        }}
-                        colors={status === 100 ? [
-                            '#fff9c4',
-                            '#fff176',
-                        ] : status === 200 ? [
-                            '#ffe0b2',
-                            '#ffb74d',
-                        ] : status === 300 ? [
-                            '#f8bbd0',
-                            '#f06292',
-                        ] : [
-                            '#bbdefb',
-                            '#64b5f6',
-                        ]}>
-                        <Text variant='headlineLarge'>
-                            {t(status === 100 ? 'label_door_status_open' : status === 200 ? 'label_door_status_warning' : status === 300 ? 'label_door_status_critical' : 'label_door_status_closed')}
-                        </Text>
-                        <View style={{
-                            height : 16,
-                        }} />
-                        <FontAwesome5
-                            name={status === 0 ? 'door-closed' : 'door-open'}
-                            size={100} />
-                    </LinearGradient>
                     <Surface
                         style={{
-                            flexGrow : 1,
+                            width        : '100%',
+                            borderRadius : 16,
                         }}
-                        mode='flat'>
+                        elevation={2}>
+                        <LinearGradient
+                            style={{
+                                minHeight      : 212,
+                                borderRadius   : 16,
+                                alignItems     : 'center',
+                                justifyContent : 'center',
+                                flexDirection  : 'column',
+                            }}
+                            colors={status === 100 ? [
+                                '#fff9c4',
+                                '#fff176',
+                            ] : status === 200 ? [
+                                '#ffe0b2',
+                                '#ffb74d',
+                            ] : status === 300 ? [
+                                '#f8bbd0',
+                                '#f06292',
+                            ] : [
+                                '#bbdefb',
+                                '#64b5f6',
+                            ]}>
+                            <Text variant='headlineLarge'>
+                                {t(status === 100 ? 'label_door_status_open' : status === 200 ? 'label_door_status_warning' : status === 300 ? 'label_door_status_critical' : 'label_door_status_closed')}
+                            </Text>
+                            <View style={{
+                                height : 16,
+                            }} />
+                            <FontAwesome5
+                                name={status === 0 ? 'door-closed' : 'door-open'}
+                                size={100} />
+                        </LinearGradient>
+                    </Surface>
+                    <View style={{
+                        flexGrow : 1,
+                    }}>
                         <List.Section>
                             <List.Item
                                 title={t('label_door_sensor')}
@@ -131,8 +140,8 @@ export const FrontDoorScreen = () => {
                                 </List.Accordion>
                             )}
                         </List.Section>
-                    </Surface>
-                </ScrollView>
+                    </View>
+                </View>
             )}
             {!deviceData && (
                 <View style={{
@@ -147,6 +156,7 @@ export const FrontDoorScreen = () => {
                         }} />
                 </View>
             )}
-        </View>
+            </View>
+        </ScrollView>
     );
 };

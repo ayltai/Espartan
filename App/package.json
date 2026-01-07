@@ -34,7 +34,7 @@
         "@reduxjs/toolkit"               : "^2.11.2",
         "@sentry/react-native"           : "^7.8.0",
         "date-fns"                       : "^4.1.0",
-        "expo"                           : "~54.0.30",
+        "expo"                           : "~54.0.31",
         "expo-linear-gradient"           : "~15.0.8",
         "expo-localization"              : "~17.0.8",
         "react"                          : "19.1.0",

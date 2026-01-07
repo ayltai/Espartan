@@ -10,10 +10,12 @@ export const Gauge = ({
     currentTemperature,
     thresholdOn,
     thresholdOff,
+    positionOffset = 0,
 } : {
     currentTemperature : number,
     thresholdOn        : number,
     thresholdOff       : number,
+    positionOffset     : number,
 }) => (
     <>
         <AnimatedCircularProgress
@@ -29,7 +31,7 @@ export const Gauge = ({
         <Text
             style={{
                 top        : 124,
-                left       : windowWidth / 2 - 38,
+                left       : windowWidth / 2 - 38 + positionOffset,
                 position   : 'absolute',
                 fontWeight : 'bold',
                 textAlign  : 'center',
@@ -40,7 +42,7 @@ export const Gauge = ({
         <Text
             style={{
                 top            : 60,
-                left           : windowWidth / 2 - 40,
+                left           : windowWidth / 2 - 40 + positionOffset,
                 display        : 'flex',
                 flexDirection  : 'row',
                 justifyContent : 'center',
@@ -53,7 +55,7 @@ export const Gauge = ({
         <Text
             style={{
                 top            : 60,
-                left           : windowWidth / 2 + 24,
+                left           : windowWidth / 2 + 24 + positionOffset,
                 display        : 'flex',
                 flexDirection  : 'row',
                 justifyContent : 'center',
@@ -66,7 +68,7 @@ export const Gauge = ({
         <Text
             style={{
                 top            : 104,
-                left           : windowWidth / 2 - 70,
+                left           : windowWidth / 2 - 70 + positionOffset,
                 display        : 'flex',
                 flexDirection  : 'row',
                 justifyContent : 'center',
@@ -79,7 +81,7 @@ export const Gauge = ({
         <Text
             style={{
                 top            : 104,
-                left           : windowWidth / 2 + 50,
+                left           : windowWidth / 2 + 50 + positionOffset,
                 display        : 'flex',
                 flexDirection  : 'row',
                 justifyContent : 'center',
@@ -92,7 +94,7 @@ export const Gauge = ({
         <Text
             style={{
                 top            : 160,
-                left           : windowWidth / 2 - 56,
+                left           : windowWidth / 2 - 56 + positionOffset,
                 display        : 'flex',
                 flexDirection  : 'row',
                 justifyContent : 'center',
@@ -105,7 +107,7 @@ export const Gauge = ({
         <Text
             style={{
                 top            : 160,
-                left           : windowWidth / 2 + 36,
+                left           : windowWidth / 2 + 36 + positionOffset,
                 display        : 'flex',
                 flexDirection  : 'row',
                 justifyContent : 'center',

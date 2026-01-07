@@ -66,11 +66,11 @@ export const App = () => {
                 ...MD3LightTheme,
                 colors: {
                     ...MD3LightTheme.colors,
-                    primary   : '#ff9800',
-                    secondary : '#2196f3',
+                    primary            : '#ff9800',
+                    secondaryContainer : '#ffb74d',
                 },
             }}>
-                <Appbar.Header>
+                <Appbar.Header elevated>
                     <Appbar.Content title={routes[index].title} />
                 </Appbar.Header>
                 <BottomNavigation
