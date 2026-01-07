@@ -1,6 +1,6 @@
 from asyncio import create_task
 from contextlib import asynccontextmanager
-from os import path
+from os import getenv, path
 
 from esparkcore.data.repositories import AppVersionRepository, DeviceRepository, NotificationRepository, TelemetryRepository, TriggerRepository
 from esparkcore.data import init_db
@@ -10,6 +10,7 @@ from esparkcore.services import MQTTManager
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from sentry_sdk import init
 
 from .data.repositories import RelayRepository, SettingsRepository
 from .data import init_settings
@@ -47,6 +48,8 @@ async def lifespan(_: FastAPI):
 
     yield
 
+
+init(dsn=getenv('SENTRY_DSN'))
 
 app = FastAPI(title='Espartan API', version='v1', lifespan=lifespan)
 
