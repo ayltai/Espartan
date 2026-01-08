@@ -63,6 +63,8 @@ class WorkerNode(BaseNode):
             for trigger in self.triggers:
                 if esparknode.configs.ENVIRONMENT == 'esp32':
                     # pylint: disable=import-error,import-outside-toplevel
+                    from machine import PIN_WAKE, wake_reason
+
                     from esparknode.triggers.gpio_interrupt import GpioInterrupt
 
                     if isinstance(trigger, GpioInterrupt):
@@ -70,7 +72,7 @@ class WorkerNode(BaseNode):
                         mail_in_door_open  : bool          = gpio_interrupt.value(0) == 1
                         mail_out_door_open : bool          = gpio_interrupt.value(1) == 1
 
-                        self._on_triggered(mail_in_door_open, trigger, 0)
+                        self._on_triggered(True if wake_reason() == PIN_WAKE else mail_in_door_open, trigger, 0)
                         self._on_triggered(mail_out_door_open, trigger, 1)
 
         self.start_detection()

@@ -2,7 +2,7 @@ import esparknode.configs
 import esparknode.constants
 
 esparknode.constants.NODE_NAME    = 'Espartan-Mail'
-esparknode.constants.NODE_VERSION = '0.5.0'
+esparknode.constants.NODE_VERSION = '0.5.8'
 
 esparknode.configs.ENVIRONMENT = 'unix'
 

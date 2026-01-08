@@ -31,8 +31,8 @@
     "dependencies"    : {
         "@sentry/react" : "^10.32.1",
         "antd"          : "^6.1.4",
-        "espark-react"  : "^0.5.7",
-        "i18next"       : "^25.7.3",
+        "espark-react"  : "^0.5.9",
+        "i18next"       : "^25.7.4",
         "react"         : "^19.2.3",
         "react-dom"     : "^19.2.3",
         "react-i18next" : "^16.5.1"

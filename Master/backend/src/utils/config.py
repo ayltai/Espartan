@@ -17,6 +17,7 @@ class AppConfig(BaseSettings):
     heating_evaluation_strategy : str = 'min'
     heating_min_temperature     : int = 16
     outbox_processing_interval  : int = 10
+    sentry_dsn                  : str = ''
 
     model_config = SettingsConfigDict(
         env_file=ENV_FILE if path.exists(ENV_FILE) else '.env',
