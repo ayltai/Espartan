@@ -23,8 +23,9 @@ export const App = () => {
             title         : t('tab_thermo'),
             focusedIcon   : () => (
                 <FontAwesome5
-                    name='temperature-high'
-                    size={24} />
+                    size={24}
+                    color='#f57c00'
+                    name='temperature-high' />
             ),
             unfocusedIcon : () => (
                 <FontAwesome5
@@ -36,8 +37,9 @@ export const App = () => {
             title         : t('tab_mail'),
             focusedIcon   : () => (
                 <MaterialIcons
-                    name='mail'
-                    size={24} />
+                    size={24}
+                    color='#f57c00'
+                    name='mail' />
             ),
             unfocusedIcon : () => (
                 <MaterialIcons
@@ -49,8 +51,9 @@ export const App = () => {
             title         : t('tab_door'),
             focusedIcon   : () => (
                 <MaterialCommunityIcons
-                    name='door-open'
-                    size={24} />
+                    size={24}
+                    color='#f57c00'
+                    name='door-open' />
             ),
             unfocusedIcon : () => (
                 <MaterialCommunityIcons
@@ -68,12 +71,24 @@ export const App = () => {
                     ...MD3LightTheme.colors,
                     primary            : '#ff9800',
                     secondaryContainer : '#ffb74d',
+                    background         : '#eeeeee',
                 },
             }}>
-                <Appbar.Header elevated>
+                <Appbar.Header
+                    elevated
+                    style={{
+                        backgroundColor : '#ffffff',
+                    }}>
                     <Appbar.Content title={routes[index].title} />
                 </Appbar.Header>
                 <BottomNavigation
+                    activeIndicatorStyle={{
+                        backgroundColor : 'transparent',
+                    }}
+                    activeColor='#f57c00'
+                    barStyle={{
+                        backgroundColor : '#ffffff',
+                    }}
                     navigationState={{
                         index,
                         routes,

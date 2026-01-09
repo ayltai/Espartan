@@ -68,49 +68,56 @@ export const FrontDoorScreen = () => {
             }}>
             {deviceData && (
                 <View style={{
-                    width   : '100%',
-                    padding : 16,
+                    width : '100%',
                 }}>
-                    <Surface
-                        style={{
-                            width        : '100%',
-                            borderRadius : 16,
-                        }}
-                        elevation={2}>
-                        <LinearGradient
-                            style={{
-                                minHeight      : 212,
-                                borderRadius   : 16,
-                                alignItems     : 'center',
-                                justifyContent : 'center',
-                                flexDirection  : 'column',
-                            }}
-                            colors={status === 100 ? [
-                                '#fff9c4',
-                                '#fff176',
-                            ] : status === 200 ? [
-                                '#ffe0b2',
-                                '#ffb74d',
-                            ] : status === 300 ? [
-                                '#f8bbd0',
-                                '#f06292',
-                            ] : [
-                                '#bbdefb',
-                                '#64b5f6',
-                            ]}>
-                            <Text variant='headlineLarge'>
-                                {t(status === 100 ? 'label_door_status_open' : status === 200 ? 'label_door_status_warning' : status === 300 ? 'label_door_status_critical' : 'label_door_status_closed')}
-                            </Text>
-                            <View style={{
-                                height : 16,
-                            }} />
-                            <FontAwesome5
-                                name={status === 0 ? 'door-closed' : 'door-open'}
-                                size={100} />
-                        </LinearGradient>
-                    </Surface>
                     <View style={{
-                        flexGrow : 1,
+                        margin : 32,
+                    }}>
+                        <Surface
+                            style={{
+                                width        : '100%',
+                                borderRadius : 24,
+                            }}
+                            elevation={2}>
+                            <LinearGradient
+                                style={{
+                                    minHeight      : 212,
+                                    borderRadius   : 16,
+                                    alignItems     : 'center',
+                                    justifyContent : 'center',
+                                    flexDirection  : 'column',
+                                }}
+                                colors={status === 100 ? [
+                                    '#fff9c4',
+                                    '#fff176',
+                                ] : status === 200 ? [
+                                    '#ffe0b2',
+                                    '#ffb74d',
+                                ] : status === 300 ? [
+                                    '#f8bbd0',
+                                    '#f06292',
+                                ] : [
+                                    '#bbdefb',
+                                    '#64b5f6',
+                                ]}>
+                                <Text variant='headlineLarge'>
+                                    {t(status === 100 ? 'label_door_status_open' : status === 200 ? 'label_door_status_warning' : status === 300 ? 'label_door_status_critical' : 'label_door_status_closed')}
+                                </Text>
+                                <View style={{
+                                    height : 16,
+                                }} />
+                                <FontAwesome5
+                                    name={status === 0 ? 'door-closed' : 'door-open'}
+                                    size={100} />
+                            </LinearGradient>
+                        </Surface>
+                    </View>
+                    <Surface style={{
+                        height               : '100%',
+                        padding              : 16,
+                        borderTopLeftRadius  : 24,
+                        borderTopRightRadius : 24,
+                        flexGrow             : 1,
                     }}>
                         <List.Section>
                             <List.Item
@@ -123,7 +130,13 @@ export const FrontDoorScreen = () => {
                                         onValueChange={handleToggleDetection} />
                                 )} />
                             {historyData && (
-                                <List.Accordion title={t('label_door_history')}>
+                                <List.Accordion
+                                    theme={{
+                                        colors : {
+                                            background : 'transparent',
+                                        },
+                                    }}
+                                    title={t('label_door_history')}>
                                     {historyData.filter(item => item.dataType === 'door_open' || item.dataType === 'motion' && item.value === 100).map(item => (
                                         <List.Item
                                             key={item.id}
@@ -140,7 +153,7 @@ export const FrontDoorScreen = () => {
                                 </List.Accordion>
                             )}
                         </List.Section>
-                    </View>
+                    </Surface>
                 </View>
             )}
             {!deviceData && (

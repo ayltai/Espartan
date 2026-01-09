@@ -47,50 +47,63 @@ export const MailboxScreen = () => {
             }}>
                 {deviceData && (
                     <View style={{
-                        width   : '100%',
-                        padding : 16,
+                        width : '100%',
                     }}>
-                        <Surface
-                            style={{
-                                width        : '100%',
-                                borderRadius : 16,
-                            }}
-                            elevation={2}>
-                            <LinearGradient
-                                style={{
-                                    minHeight      : 212,
-                                    borderRadius   : 16,
-                                    alignItems     : 'center',
-                                    justifyContent : 'center',
-                                    flexDirection  : 'column',
-                                }}
-                                colors={status === -1 ? [
-                                    '#b2dfdb',
-                                    '#4db6ac',
-                                ] : status === 1 ? [
-                                    '#fff9c4',
-                                    '#fff176',
-                                ] : [
-                                    '#f8bbd0',
-                                    '#f06292',
-                                ]}>
-                                <Text variant='headlineLarge'>
-                                    {t(status === -1 ? 'label_mail_status_empty' : status === 1 ? 'label_mail_status_new_mail' : 'label_mail_status_unknown')}
-                                </Text>
-                                <View style={{
-                                    height : 16,
-                                }} />
-                                <MaterialCommunityIcons
-                                    name={status === -1 ? 'email-off-outline' : status === 1 ? 'email-multiple' : 'email-alert-outline'}
-                                    size={100} />
-                            </LinearGradient>
-                        </Surface>
                         <View style={{
-                            flexGrow : 1,
+                            margin : 32,
+                        }}>
+                            <Surface
+                                style={{
+                                    width        : '100%',
+                                    borderRadius : 24,
+                                }}
+                                elevation={2}>
+                                <LinearGradient
+                                    style={{
+                                        minHeight      : 212,
+                                        borderRadius   : 16,
+                                        alignItems     : 'center',
+                                        justifyContent : 'center',
+                                        flexDirection  : 'column',
+                                    }}
+                                    colors={status === -1 ? [
+                                        '#b2dfdb',
+                                        '#4db6ac',
+                                    ] : status === 1 ? [
+                                        '#fff9c4',
+                                        '#fff176',
+                                    ] : [
+                                        '#f8bbd0',
+                                        '#f06292',
+                                    ]}>
+                                    <Text variant='headlineLarge'>
+                                        {t(status === -1 ? 'label_mail_status_empty' : status === 1 ? 'label_mail_status_new_mail' : 'label_mail_status_unknown')}
+                                    </Text>
+                                    <View style={{
+                                        height : 16,
+                                    }} />
+                                    <MaterialCommunityIcons
+                                        name={status === -1 ? 'email-off-outline' : status === 1 ? 'email-multiple' : 'email-alert-outline'}
+                                        size={100} />
+                                </LinearGradient>
+                            </Surface>
+                        </View>
+                        <Surface style={{
+                            height               : '100%',
+                            padding              : 16,
+                            borderTopLeftRadius  : 24,
+                            borderTopRightRadius : 24,
+                            flexGrow             : 1,
                         }}>
                             <List.Section>
                                 {historyData && (
-                                    <List.Accordion title={t('label_mail_history')}>
+                                    <List.Accordion
+                                        theme={{
+                                            colors : {
+                                                background : 'transparent',
+                                            },
+                                        }}
+                                        title={t('label_mail_history')}>
                                         {historyData.map(item => (
                                             <List.Item
                                                 key={item.id}
@@ -107,7 +120,7 @@ export const MailboxScreen = () => {
                                     </List.Accordion>
                                 )}
                             </List.Section>
-                        </View>
+                        </Surface>
                     </View>
                 )}
                 {!deviceData && (

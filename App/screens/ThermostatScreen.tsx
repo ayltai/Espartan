@@ -131,54 +131,60 @@ export const ThermostatScreen = () => {
                 justifyContent : 'center',
             }}>
                 <View style={{
-                    width   : '100%',
-                    padding : 16,
-                }}>
-                    <Surface
-                        style={{
-                            width        : '100%',
-                            borderRadius : 16,
-                        }}
-                        elevation={2}>
-                        <LinearGradient
-                            style={{
-                                width          : '100%',
-                                minHeight      : 200,
-                                paddingTop     : 32,
-                                borderRadius   : 16,
-                                display        : 'flex',
-                                alignItems     : 'center',
-                                justifyContent : 'center',
-                            }}
-                            colors={currentTemperature < (configurationsData ? configurationsData.thresholdOn * 100 : 1600) ? [
-                                '#bbdefb',
-                                '#64b5f6',
-                            ] : currentTemperature > (configurationsData ? configurationsData?.thresholdOff * 100 : 2000) ? [
-                                '#ffccbc',
-                                '#ff8a65',
-                            ] : [
-                                '#c8e6c9',
-                                '#81c784',
-                            ]}>
-                            {configurationsData && (
-                                <Gauge
-                                    currentTemperature={currentTemperature}
-                                    thresholdOn={configurationsData.thresholdOn * 100}
-                                    thresholdOff={configurationsData.thresholdOff * 100}
-                                    positionOffset={-16} />
-                            )}
-                        </LinearGradient>
-                    </Surface>
-                </View>
-                <View style={{
-                    paddingTop    : 16,
-                    display       : 'flex',
-                    flexDirection : 'column',
-                    flexGrow      : 1,
-                    alignItems    : 'center',
+                    width : '100%',
                 }}>
                     <View style={{
-                        marginBottom   : 8,
+                        margin : 32,
+                    }}>
+                        <Surface
+                            style={{
+                                width        : '100%',
+                                borderRadius : 24,
+                            }}
+                            elevation={2}>
+                            <LinearGradient
+                                style={{
+                                    width          : '100%',
+                                    minHeight      : 200,
+                                    paddingTop     : 32,
+                                    borderRadius   : 16,
+                                    display        : 'flex',
+                                    alignItems     : 'center',
+                                    justifyContent : 'center',
+                                }}
+                                colors={currentTemperature < (configurationsData ? configurationsData.thresholdOn * 100 : 1600) ? [
+                                    '#bbdefb',
+                                    '#64b5f6',
+                                ] : currentTemperature > (configurationsData ? configurationsData?.thresholdOff * 100 : 2000) ? [
+                                    '#ffccbc',
+                                    '#ff8a65',
+                                ] : [
+                                    '#c8e6c9',
+                                    '#81c784',
+                                ]}>
+                                {configurationsData && (
+                                    <Gauge
+                                        currentTemperature={currentTemperature}
+                                        thresholdOn={configurationsData.thresholdOn * 100}
+                                        thresholdOff={configurationsData.thresholdOff * 100}
+                                        positionOffset={-32} />
+                                )}
+                            </LinearGradient>
+                        </Surface>
+                    </View>
+                </View>
+                <Surface style={{
+                    width                : '100%',
+                    padding              : 24,
+                    borderTopLeftRadius  : 24,
+                    borderTopRightRadius : 24,
+                    display              : 'flex',
+                    flexDirection        : 'column',
+                    flexGrow             : 1,
+                    alignItems           : 'center',
+                }}>
+                    <View style={{
+                        marginBottom   : 16,
                         display        : 'flex',
                         flexDirection  : 'row',
                         alignItems     : 'center',
@@ -199,7 +205,10 @@ export const ThermostatScreen = () => {
                             {currentStateData === 1 ? t('label_thermo_status_on') : t('label_thermo_status_off')}
                         </Text>
                     </View>
-                    <Divider />
+                    <Divider style={{
+                        width        : '100%',
+                        marginBottom : 16,
+                    }} />
                     {devicesData && devicesData.filter(device => device.capabilities && device.capabilities.indexOf('temperature') >= 0).slice().sort((a, b) => {
                         const indexA = a.displayName ? ORDER.indexOf(a.displayName) : -1;
                         const indexB = b.displayName ? ORDER.indexOf(b.displayName) : -1;
@@ -215,7 +224,6 @@ export const ThermostatScreen = () => {
                             key={device.id}
                             style={{
                                 width          : '100%',
-                                paddingLeft    : 16,
                                 display        : 'flex',
                                 flexDirection  : 'row',
                                 justifyContent : 'space-between',
@@ -258,7 +266,11 @@ export const ThermostatScreen = () => {
                             </Text>
                         </View>
                     ))}
-                    <Divider />
+                    <Divider style={{
+                        width        : '100%',
+                        marginTop    : 16,
+                        marginBottom : 16,
+                    }} />
                     {configurationsData && (
                         <>
                             <View style={{
@@ -299,6 +311,8 @@ export const ThermostatScreen = () => {
                             </View>
                             <View style={{
                                 width          : '50%',
+                                marginTop      : 16,
+                                marginBottom   : 16,
                                 display        : 'flex',
                                 flexDirection  : 'row',
                                 alignItems     : 'center',
@@ -328,7 +342,7 @@ export const ThermostatScreen = () => {
                             </View>
                         </>
                     )}
-                </View>
+                </Surface>
             </View>
         </ScrollView>
     );
