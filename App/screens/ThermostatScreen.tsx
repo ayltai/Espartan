@@ -4,19 +4,19 @@ import React, { useEffect, useMemo, } from 'react';
 import { ScrollView, View, } from 'react-native';
 import { Divider, IconButton, SegmentedButtons, Surface, Text, } from 'react-native-paper';
 
-import { useGetConfigurationsQuery, useGetCurrentStateQuery, useGetDevicesQuery, useGetRecentTelemetryQuery, useSetConfigurationsMutation, } from '../apis';
-import { Gauge, } from '../components';
+import { useGetConfigurationsQuery, useGetCurrentStateQuery, useGetDevicesQuery, useGetRecentTelemetryQuery, useGetTelemetriesQuery, useSetConfigurationsMutation, } from '../apis';
+import { DeviceChart, DeviceList, Gauge, } from '../components';
 import { API_POLLING_INTERVAL_SLOW, HEATING_TEMPERATURE_MAX, HEATING_TEMPERATURE_MIN, } from '../constants';
 import { t, } from '../i18n';
 import { handleError, } from '../utils';
 
-const ORDER = [
-    'Entrance',
-    'Kitchen',
-    'Living Room',
-    'Guest Room',
-    'Harold',
-    'Loft',
+const COLOURS = [
+    '#ba68c8',
+    '#2196f3',
+    '#ff5722',
+    '#afb42b',
+    '#455a64',
+    '#4caf50',
 ];
 
 export const ThermostatScreen = () => {
@@ -31,6 +31,10 @@ export const ThermostatScreen = () => {
     });
 
     const { data : telemetryData, error : telemetryError, } = useGetRecentTelemetryQuery(24 * 60 * 60, {
+        pollingInterval : API_POLLING_INTERVAL_SLOW,
+    });
+
+    const { data : telemetriesData, error : telemetriesError, } = useGetTelemetriesQuery(undefined, {
         pollingInterval : API_POLLING_INTERVAL_SLOW,
     });
 
@@ -114,6 +118,10 @@ export const ThermostatScreen = () => {
     useEffect(() => {
         if (telemetryError) handleError(telemetryError);
     }, [ telemetryError, ]);
+
+    useEffect(() => {
+        if (telemetriesError) handleError(telemetriesError);
+    }, [ telemetriesError, ]);
 
     useEffect(() => {
         if (currentStateError) handleError(currentStateError);
@@ -209,63 +217,12 @@ export const ThermostatScreen = () => {
                         width        : '100%',
                         marginBottom : 16,
                     }} />
-                    {devicesData && devicesData.filter(device => device.capabilities && device.capabilities.indexOf('temperature') >= 0).slice().sort((a, b) => {
-                        const indexA = a.displayName ? ORDER.indexOf(a.displayName) : -1;
-                        const indexB = b.displayName ? ORDER.indexOf(b.displayName) : -1;
-
-                        if (indexA === -1 && indexB === -1) return devicesData.indexOf(a) - devicesData.indexOf(b);
-
-                        if (indexA === -1) return 1;
-                        if (indexB === -1) return -1;
-
-                        return indexA - indexB;
-                    }).map(device => (
-                        <View
-                            key={device.id}
-                            style={{
-                                width          : '100%',
-                                display        : 'flex',
-                                flexDirection  : 'row',
-                                justifyContent : 'space-between',
-                            }}>
-                            <Text
-                                style={{
-                                    marginRight : 8,
-                                    flexGrow    : 1,
-                                }}
-                                variant='bodyMedium'>
-                                {device.displayName}
-                            </Text>
-                            <Text
-                                style={{
-                                    minWidth       : 72,
-                                    display        : 'flex',
-                                    flexDirection  : 'row',
-                                    justifyContent : 'center',
-                                }}
-                                variant='bodyMedium'>
-                                <FontAwesome6
-                                    name='temperature-low'
-                                    size={14} />
-                                &nbsp;
-                                {(telemetryData && telemetryData.filter(telemetry => telemetry.deviceId === device.id && telemetry.dataType === 'temperature')?.map(telemetry => telemetry.value / 100.0)[0]?.toFixed(1)) ?? '-'}°C
-                            </Text>
-                            <Text
-                                style={{
-                                    minWidth       : 64,
-                                    display        : 'flex',
-                                    flexDirection  : 'row',
-                                    justifyContent : 'center',
-                                }}
-                                variant='bodyMedium'>
-                                <FontAwesome6
-                                    name='droplet'
-                                    size={14} />
-                                &nbsp;
-                                {(telemetryData && telemetryData.filter(telemetry => telemetry.deviceId === device.id && telemetry.dataType === 'humidity')?.map(telemetry => telemetry.value / 100.0)[0]?.toFixed(0)) ?? '-'}%
-                            </Text>
-                        </View>
-                    ))}
+                    {devicesData && telemetryData && (
+                        <DeviceList
+                            devices={devicesData.filter(device => device.capabilities && (device.capabilities.indexOf('temperature') >= 0 || device.capabilities.indexOf('humidity') >= 0))}
+                            telemetries={telemetryData}
+                            colours={COLOURS} />
+                    )}
                     <Divider style={{
                         width        : '100%',
                         marginTop    : 16,
@@ -341,6 +298,17 @@ export const ThermostatScreen = () => {
                                     onValueChange={handleStrategyChange} />
                             </View>
                         </>
+                    )}
+                    <View style={{
+                        width        : '100%',
+                        marginTop    : 16,
+                        marginBottom : 16,
+                    }} />
+                    {devicesData && telemetriesData && (
+                        <DeviceChart
+                            devices={devicesData.filter(device => device.capabilities && device.capabilities.indexOf('temperature') >= 0)}
+                            telemetries={telemetriesData}
+                            colours={COLOURS} />
                     )}
                 </Surface>
             </View>

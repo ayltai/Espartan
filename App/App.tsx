@@ -67,10 +67,10 @@ export const App = () => {
         <Provider store={store}>
             <PaperProvider theme={{
                 ...MD3LightTheme,
-                colors: {
+                colors : {
                     ...MD3LightTheme.colors,
                     primary            : '#ff9800',
-                    secondaryContainer : '#ffb74d',
+                    secondaryContainer : '#ff9800',
                     background         : '#eeeeee',
                 },
             }}>
@@ -85,7 +85,7 @@ export const App = () => {
                     activeIndicatorStyle={{
                         backgroundColor : 'transparent',
                     }}
-                    activeColor='#f57c00'
+                    activeColor='#ff9800'
                     barStyle={{
                         backgroundColor : '#ffffff',
                     }}

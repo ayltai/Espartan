@@ -67,6 +67,13 @@ export const espartanService = createApi({
                 maxRetries : API_MAX_RETRIES,
             },
         }),
+        getTelemetries         : build.query<Telemetry[], void>({
+            query             : () => '/telemetry?order_by=timestamp desc&limit=2300',
+            transformResponse : (response : any) => response.map((item : any) => snakeCaseToCamelCase(item)),
+            extraOptions      : {
+                maxRetries : API_MAX_RETRIES,
+            },
+        }),
         getRecentTelemetry     : build.query<Telemetry[], number>({
             query             : offset => `/telemetry/recent?offset=${offset}`,
             transformResponse : (response : any) => response.map((item : any) => snakeCaseToCamelCase(item)),
@@ -76,7 +83,7 @@ export const espartanService = createApi({
         }),
         getHistoricalTelemetry : build.query<Telemetry[], {
             deviceId : string,
-            offset : number,
+            offset   : number,
         }>({
             query             : ({
                 deviceId,
@@ -94,4 +101,4 @@ export const espartanService = createApi({
     ],
 });
 
-export const { useGetConfigurationsQuery, useGetCurrentStateQuery, useGetDeviceQuery, useGetDevicesQuery, useGetHistoricalTelemetryQuery, useGetRecentTelemetryQuery, useSetConfigurationsMutation, useSetDeviceMutation, } = espartanService;
+export const { useGetConfigurationsQuery, useGetCurrentStateQuery, useGetDeviceQuery, useGetDevicesQuery, useGetHistoricalTelemetryQuery, useGetRecentTelemetryQuery, useGetTelemetriesQuery, useSetConfigurationsMutation, useSetDeviceMutation, } = espartanService;
