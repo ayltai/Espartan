@@ -1,6 +1,6 @@
 {
     "name"            : "espartan-master",
-    "version"         : "0.1.0",
+    "version"         : "0.5.14",
     "author"          : {
         "name" : "Alan Tai"
     },
@@ -29,29 +29,28 @@
         "serve"   : "cross-env REFINE_NO_TELEMETRY=true refine serve"
     },
     "dependencies"    : {
-        "@sentry/react" : "^10.32.1",
-        "antd"          : "^6.1.4",
-        "espark-react"  : "^0.5.10",
-        "i18next"       : "^25.7.4",
-        "react"         : "^19.2.3",
-        "react-dom"     : "^19.2.3",
-        "react-i18next" : "^16.5.1"
+        "@sentry/react" : "^10.38.0",
+        "antd"          : "^6.2.3",
+        "espark-react"  : "^0.5.14",
+        "i18next"       : "^25.8.1",
+        "react"         : "^19.2.4",
+        "react-dom"     : "^19.2.4",
+        "react-i18next" : "^16.5.4"
     },
     "devDependencies" : {
         "@eslint/eslintrc"           : "^3.3.3",
         "@eslint/js"                 : "^9.39.2",
         "@refinedev/cli"             : "^2.16.50",
-        "@stylistic/eslint-plugin"   : "^5.7.0",
+        "@stylistic/eslint-plugin"   : "^5.7.1",
         "@testing-library/jest-dom"  : "^6.9.1",
-        "@testing-library/react"     : "^16.3.1",
-        "@types/node"                : "^25.0.5",
-        "@types/react"               : "^19.2.8",
+        "@testing-library/react"     : "^16.3.2",
+        "@types/react"               : "^19.2.10",
         "@types/react-dom"           : "^19.2.3",
         "@types/react-test-renderer" : "^19.1.0",
-        "@typescript-eslint/parser"  : "^8.52.0",
-        "@vitejs/plugin-react-swc"   : "^4.2.2",
-        "@vitest/coverage-v8"        : "^4.0.16",
-        "@vitest/ui"                 : "^4.0.16",
+        "@typescript-eslint/parser"  : "^8.54.0",
+        "@vitejs/plugin-react-swc"   : "^4.2.3",
+        "@vitest/coverage-v8"        : "^4.0.18",
+        "@vitest/ui"                 : "^4.0.18",
         "cross-env"                  : "^10.1.0",
         "eslint"                     : "^9.39.2",
         "eslint-plugin-import"       : "^2.32.0",
@@ -59,17 +58,19 @@
         "eslint-plugin-react"        : "^7.37.5",
         "eslint-plugin-react-hooks"  : "^7.0.1",
         "eslint-plugin-unicorn"      : "^62.0.0",
-        "globals"                    : "^17.0.0",
-        "jsdom"                      : "^27.4.0",
+        "globals"                    : "^17.3.0",
+        "jsdom"                      : "^28.0.0",
         "prop-types"                 : "^15.8.1",
         "typescript"                 : "^5.9.3",
-        "typescript-eslint"          : "^8.52.0",
+        "typescript-eslint"          : "^8.54.0",
         "vite"                       : "^7.3.1",
-        "vitest"                     : "^4.0.16",
+        "vitest"                     : "^4.0.18",
         "vitest-fetch-mock"          : "^0.4.5"
     },
     "resolutions"     : {
-        "qs" : "^6.14.1"
+        "qs"        : "^6.14.1",
+        "lodash"    : "^4.17.23",
+        "lodash-es" : "^4.17.23"
     },
     "engines"         : {
         "node" : ">=22",

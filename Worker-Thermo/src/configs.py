@@ -26,34 +26,34 @@ if MODE == 'actuator':
     esparknode.configs.UNUSED_PINS = [
         0,
         1,
+        4,
+        5,
         6,
         7,
         9,
         10,
-        20,
-        21,
     ]
 elif MODE == 'sensor':
     esparknode.configs.UNUSED_PINS = [
         0,
         2,
         3,
+        4,
+        5,
         6,
         7,
         9,
         10,
-        20,
-        21,
     ]
 
-SDA_PIN : int = 4
-SCL_PIN : int = 5
+SDA_PIN : int = 20
+SCL_PIN : int = 21
 
 VOLTAGE_PIN     : int = 1
 RELAY_SET_PIN   : int = 2
 RELAY_RESET_PIN : int = 3
 
-VOLTAGE_FULL  : float = 3 * 1.375
-VOLTAGE_EMPTY : float = 3 * 1.15
+VOLTAGE_FULL  : float = 3 * 1.33
+VOLTAGE_EMPTY : float = 3 * 1.22
 
 VOLTAGE_DIVIDER_RATIO : float = 5.0

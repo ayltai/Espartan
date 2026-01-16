@@ -134,14 +134,15 @@ class BaseNode:
 
         self.watchdog.feed()
 
-        deadline = time() + PARAMETERS_UPDATE_TIMEOUT
-        while time() < deadline:
-            if self.parameters_updated:
-                break
+        if not self.parameters_updated:
+            deadline = time() + PARAMETERS_UPDATE_TIMEOUT
+            while time() < deadline:
+                if self.parameters_updated:
+                    break
 
-            self.watchdog.feed()
+                self.watchdog.feed()
 
-            sleep(1)
+                sleep(1)
 
         if not self.parameters_updated:
             log_debug('Parameters update timeout reached, entering deepsleep mode...')

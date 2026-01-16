@@ -10,7 +10,7 @@ import { store, } from './states';
 
 init({
     dsn            : process.env.EXPO_PUBLIC_SENTRY_DSN,
-    sendDefaultPii : true,
+    sendDefaultPii : false,
     enableLogs     : false,
 });
 

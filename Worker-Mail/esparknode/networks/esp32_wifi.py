@@ -7,7 +7,7 @@ from esparknode.networks.base_wifi import BaseWiFiManager
 from esparknode.utils.base_watchdog import BaseWatchdog
 from esparknode.utils.logging import log_debug
 
-TIMEOUT: int = 60
+TIMEOUT: int = 20
 
 
 class WiFiManager(BaseWiFiManager):
