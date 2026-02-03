@@ -20,8 +20,8 @@ importers:
         specifier: ^6.2.3
         version: 6.2.3(date-fns@4.1.0)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       espark-react:
-        specifier: ^0.5.14
-        version: 0.5.14(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react@19.2.10)(dayjs@1.11.19)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3)
+        specifier: ^0.5.15
+        version: 0.5.15(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react@19.2.10)(dayjs@1.11.19)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3)
       i18next:
         specifier: ^25.8.1
         version: 25.8.1(typescript@5.9.3)
@@ -2285,8 +2285,8 @@ packages:
       jiti:
         optional: true
 
-  espark-react@0.5.14:
-    resolution: {integrity: sha512-eybQzz3oAshF5l7tqVOJuTgEoEmpNl/587wkVycGNGicgrTCNM8o0h+TzLujjz4A/3p6Tt3HeRo2trJF+1R6wA==}
+  espark-react@0.5.15:
+    resolution: {integrity: sha512-HjHjQ6M8dXrI3EgMXq7OZr+Y8OhSxevHYRfOf1BVTtE8YoqK8n52HHNHUtdU40oQK8hSD0gtNwU9qFS0od6Y/Q==}
     engines: {node: '>=22', pnpm: '>=10'}
     peerDependencies:
       react: ^19.2.4
@@ -6976,7 +6976,7 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  espark-react@0.5.14(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react@19.2.10)(dayjs@1.11.19)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3):
+  espark-react@0.5.15(@types/react-dom@19.2.3(@types/react@19.2.10))(@types/react@19.2.10)(dayjs@1.11.19)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.3):
     dependencies:
       '@ant-design/icons': 6.1.0(react-dom@19.2.4(react@19.2.4))(react@19.2.4)
       '@fortawesome/fontawesome-svg-core': 7.1.0
