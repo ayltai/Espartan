@@ -2,7 +2,7 @@ import esparknode.configs
 import esparknode.constants
 
 esparknode.constants.NODE_NAME    = 'Espartan-Thermo'
-esparknode.constants.NODE_VERSION = '0.5.1'
+esparknode.constants.NODE_VERSION = '0.5.15'
 
 esparknode.configs.ENVIRONMENT = 'unix'
 

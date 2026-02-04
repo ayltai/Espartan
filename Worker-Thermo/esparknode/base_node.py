@@ -122,7 +122,7 @@ class BaseNode:
 
                             self.watchdog.feed()
 
-                    break
+                        break
                 # pylint: disable=broad-exception-caught
                 except Exception as e:
                     log_debug(f'Error reading from sensor {sensor.__class__.__name__}: {e}')

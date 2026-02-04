@@ -1,10 +1,9 @@
 # pylint: disable=import-error
 from machine import ADC, Pin
+from time import sleep_ms
 
 from esparknode.sensors.base_sensor import BaseSensor
 from esparknode.utils.logging import log_debug
-
-ADJUSTMENT_FACTOR: float = 1.04
 
 
 class VoltageSensor(BaseSensor):
@@ -15,14 +14,25 @@ class VoltageSensor(BaseSensor):
         self.voltage_divider_ratio = voltage_divider_ratio
 
     def _read_filtered(self, samples: int = 16, discard: int = 4) -> float:
-        readings = [self.pin.read_uv() for _ in range(samples)]
+        readings = []
+
+        for i in range(samples):
+            reading = self.pin.read_uv()
+            if reading > 0:
+                readings.append(reading)
+
+            if i % 4 == 0:
+                sleep_ms(0)
+
         readings.sort()
-        readings = readings[discard:-discard]
+
+        if len(readings) > (discard * 2):
+            readings = readings[discard:-discard]
 
         return sum(readings) / len(readings)
 
     def _read(self) -> float:
-        value = self._read_filtered() / 1_000_000 * self.voltage_divider_ratio * ADJUSTMENT_FACTOR
+        value = self._read_filtered() / 1_000_000 * self.voltage_divider_ratio
         log_debug(f'Voltage reading: {value:.3f} V')
 
         return value

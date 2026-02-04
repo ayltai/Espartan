@@ -36,7 +36,13 @@
             "backgroundColor" : "#ffffff"
         },
         "ios"                : {
-            "supportsTablet" : true
+            "supportsTablet" : true,
+            "infoPlist"      : {
+                "CFBundleLocalizations" : [
+                    "en"
+                ]
+            },
+            "bundleIdentifier"  : "com.geekylifehacks.espartan"
         },
         "android"            : {
             "adaptiveIcon"                 : {
@@ -44,10 +50,16 @@
                 "backgroundColor" : "#ffffff"
             },
             "edgeToEdgeEnabled"            : true,
-            "predictiveBackGestureEnabled" : false
+            "predictiveBackGestureEnabled" : false,
+            "package"           : "com.geekylifehacks.espartan"
         },
         "web"                : {
             "favicon" : "./assets/favicon.png"
+        },
+        "extra"              : {
+            "eas" : {
+                "projectId" : "c5c600c1-1154-4c36-b508-b88a05caf750"
+            }
         }
     }
 }
