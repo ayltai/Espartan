@@ -1,9 +1,6 @@
-from esparknode.networks.base_requests import BaseRequests
-
-
 class BaseOtaManager:
-    def __init__(self, requests: BaseRequests):
-        self.requests = requests
+    def __init__(self, base_url: str = None) -> None:
+        self.base_url: str = base_url
 
     def apply(self, manifest: str) -> None:
-        raise NotImplementedError('decompress_and_apply method must be implemented by subclasses')
+        raise NotImplementedError('apply method must be implemented by subclasses')

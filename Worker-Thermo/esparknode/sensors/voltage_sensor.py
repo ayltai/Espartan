@@ -1,6 +1,8 @@
+# pylint: disable=no-name-in-module
+from time import sleep_ms
+
 # pylint: disable=import-error
 from machine import ADC, Pin
-from time import sleep_ms
 
 from esparknode.sensors.base_sensor import BaseSensor
 from esparknode.utils.logging import log_debug

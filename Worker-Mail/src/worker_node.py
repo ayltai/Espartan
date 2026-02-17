@@ -10,6 +10,7 @@ from esparknode.networks.base_mqtt import BaseMQTTManager
 from esparknode.networks.base_wifi import BaseWiFiManager
 from esparknode.sensors.base_sensor import BaseSensor
 from esparknode.triggers.base_trigger import BaseTrigger
+from esparknode.utils.base_ota_manager import BaseOtaManager
 from esparknode.utils.base_sleeper import BaseSleeper
 from esparknode.utils.base_watchdog import BaseWatchdog
 
@@ -25,6 +26,7 @@ class WorkerNode(BaseNode):
             wifi_manager      : BaseWiFiManager,
             mqtt_manager      : BaseMQTTManager,
             bluetooth_manager : BaseBluetoothManager = None,
+            ota_manager       : BaseOtaManager       = None,
             sensors           : list[BaseSensor]     = None,
             triggers          : list[BaseTrigger]    = None,
     ):
@@ -35,6 +37,7 @@ class WorkerNode(BaseNode):
             wifi_manager=wifi_manager,
             mqtt_manager=mqtt_manager,
             bluetooth_manager=bluetooth_manager,
+            ota_manager=ota_manager,
             sensors=sensors,
             triggers=triggers,
         )

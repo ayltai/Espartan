@@ -5,7 +5,6 @@ from esparknode.configs import CAPABILITIES, ENVIRONMENT, PARAMETERS_UPDATE_TIME
 from esparknode.constants import NODE_NAME, NODE_VERSION, TOPIC_ACTION, TOPIC_DEVICE, TOPIC_OTA, TOPIC_REGISTRATION, TOPIC_TELEMETRY
 from esparknode.networks.base_bluetooth import BaseBluetoothManager
 from esparknode.networks.base_mqtt import BaseMQTTManager
-from esparknode.networks.base_requests import BaseRequests
 from esparknode.networks.base_wifi import BaseWiFiManager
 from esparknode.sensors.base_sensor import BaseSensor
 from esparknode.triggers.base_trigger import BaseTrigger
@@ -24,7 +23,6 @@ class BaseNode:
             wifi_manager      : BaseWiFiManager,
             mqtt_manager      : BaseMQTTManager,
             bluetooth_manager : BaseBluetoothManager = None,
-            requests          : BaseRequests         = None,
             ota_manager       : BaseOtaManager       = None,
             sensors           : list[BaseSensor]     = None,
             triggers          : list[BaseTrigger]    = None,
@@ -35,12 +33,12 @@ class BaseNode:
         self.wifi_manager      = wifi_manager
         self.mqtt_manager      = mqtt_manager
         self.bluetooth_manager = bluetooth_manager
-        self.requests          = requests
         self.ota_manager       = ota_manager
         self.sensors           = sensors if sensors is not None else []
         self.triggers          = triggers if triggers is not None else []
 
         self.parameters_updated : bool = False
+        self.deep_sleep_enabled : bool = True
         self.sleep_interval     : int  = 600
 
         self._manage_power()
@@ -69,7 +67,7 @@ class BaseNode:
         elif topic == f'{TOPIC_DEVICE}/{self.device_id}':
             self._handle_parameters_update(payload)
         elif topic == f'{TOPIC_OTA}/{self.device_id}':
-            self._handle_otp(payload)
+            self._handle_ota(payload)
 
     # pylint: disable=unused-argument
     def _handle_parameters_update(self, parameters: dict) -> None:
@@ -78,19 +76,13 @@ class BaseNode:
     def _handle_action(self, payload: dict) -> None:
         pass
 
-    def _handle_otp(self, payload: dict) -> None:
+    def _handle_ota(self, payload: dict) -> None:
         download_url = payload['download_url']
-        if download_url and self.requests:
+        if download_url:
             log_debug(f'Downloading OTA update from {download_url}...')
 
-            ota_data = self.requests.get(download_url)
-            if ota_data and ota_data['status_code'] == 200:
-                log_debug('OTA update downloaded successfully, applying update...', payload['device_id'], self.mqtt_manager)
-
-                if self.ota_manager:
-                    self.ota_manager.apply(ota_data['text'])
-            else:
-                log_debug(f'Error {ota_data["status_code"]}: Failed to download OTA update.', payload['device_id'], self.mqtt_manager)
+            if self.ota_manager:
+                self.ota_manager.apply(download_url)
 
     def register(self) -> None:
         log_debug(f'Registering device {self.device_id}...')
@@ -149,11 +141,18 @@ class BaseNode:
 
             self.sleeper.deep_sleep(self.sleep_interval * 1000)
         else:
-            self.publish_telemetry()
+            if self.deep_sleep_enabled:
+                self.publish_telemetry()
+            else:
+                while not self.deep_sleep_enabled:
+                    self.publish_telemetry()
+
+                    sleep(self.sleep_interval * 1000)
 
         self.watchdog.feed()
 
-        self.wifi_manager.ensure_wifi_off()
+        if self.deep_sleep_enabled:
+            self.wifi_manager.ensure_wifi_off()
 
-        log_debug(f'Deep sleeping for {self.sleep_interval} seconds...')
-        self.sleeper.deep_sleep(self.sleep_interval * 1000)
+            log_debug(f'Deep sleeping for {self.sleep_interval} seconds...')
+            self.sleeper.deep_sleep(self.sleep_interval * 1000)

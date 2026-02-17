@@ -17,7 +17,7 @@ class WiFiManager(BaseWiFiManager):
         self.wlan = WLAN(WLAN.IF_STA)
 
     def ensure_wifi_on(self) -> bool:
-        self.wlan.active(True)
+        self._hard_reset_wifi()
 
         if not self.wlan.isconnected():
             log_debug(f'Connecting to WiFi SSID: {self.ssid}')
@@ -41,3 +41,10 @@ class WiFiManager(BaseWiFiManager):
         log_debug('WiFi turned off')
 
         return not self.wlan.isconnected()
+
+    def _hard_reset_wifi(self):
+        self.wlan.active(False)
+        sleep(1)
+        self.wlan.active(True)
+        self.wlan.disconnect()
+        sleep(1)

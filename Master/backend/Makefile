@@ -36,4 +36,4 @@ pylint:
 	pylint --recursive=y --fail-under=9.5 src
 
 test:
-	ENVIRONMENT=dev pytest --cov=src --cov-report=term --cov-report=lcov
+	ENVIRONMENT=dev UPLOAD_PATH=/tmp pytest --cov=src --cov-report=term --cov-report=lcov

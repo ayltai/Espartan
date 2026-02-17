@@ -1,5 +1,5 @@
 import { MaterialCommunityIcons, } from '@expo/vector-icons';
-import { compareAsc, formatDistanceToNow, intlFormat, } from 'date-fns';
+import { differenceInSeconds, formatDistanceToNow, intlFormat, } from 'date-fns';
 import { LinearGradient, } from 'expo-linear-gradient';
 import React, { useEffect, } from 'react';
 import { ScrollView, View, } from 'react-native';
@@ -26,7 +26,7 @@ export const MailboxScreen = () => {
     const lastInboxOpenedData  = historyData?.find(item => item.value === 100);
     const lastOutboxOpenedData = historyData?.find(item => item.value === 200);
 
-    const status = compareAsc(lastInboxOpenedData ? new Date(lastInboxOpenedData.timestamp) : new Date(0), lastOutboxOpenedData ? new Date(lastOutboxOpenedData.timestamp) : new Date(0));
+    const hasMail = Math.abs(differenceInSeconds(lastInboxOpenedData ? new Date(lastInboxOpenedData.timestamp) : new Date(0), lastOutboxOpenedData ? new Date(lastOutboxOpenedData.timestamp) : new Date(0))) < 60;
 
     useEffect(() => {
         if (deviceError) handleError(deviceError);
@@ -66,24 +66,21 @@ export const MailboxScreen = () => {
                                         justifyContent : 'center',
                                         flexDirection  : 'column',
                                     }}
-                                    colors={status === -1 ? [
-                                        '#b2dfdb',
-                                        '#4db6ac',
-                                    ] : status === 1 ? [
+                                    colors={hasMail ? [
                                         '#fff9c4',
                                         '#fff176',
                                     ] : [
-                                        '#f8bbd0',
-                                        '#f06292',
+                                        '#b2dfdb',
+                                        '#4db6ac',
                                     ]}>
                                     <Text variant='headlineLarge'>
-                                        {t(status === -1 ? 'label_mail_status_empty' : status === 1 ? 'label_mail_status_new_mail' : 'label_mail_status_unknown')}
+                                        {t(hasMail ? 'label_mail_status_new_mail' : 'label_mail_status_empty')}
                                     </Text>
                                     <View style={{
                                         height : 16,
                                     }} />
                                     <MaterialCommunityIcons
-                                        name={status === -1 ? 'email-off-outline' : status === 1 ? 'email-multiple' : 'email-alert-outline'}
+                                        name={hasMail ? 'email-multiple' : 'email-off-outline'}
                                         size={100} />
                                 </LinearGradient>
                             </Surface>

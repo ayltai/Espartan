@@ -11,7 +11,6 @@
     "label_mail_history"                   : "Mailbox status history",
     "label_mail_status_empty"              : "Empty",
     "label_mail_status_new_mail"           : "You have new mail",
-    "label_mail_status_unknown"            : "Unknown status",
     "label_mail_status_inbox_opened"       : "Inbox opened",
     "label_mail_status_inbox_closed"       : "Inbox closed",
     "label_mail_status_outbox_opened"      : "Outbox opened",
