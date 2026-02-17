@@ -9,3 +9,6 @@ coverage.lcov
 
 # Secrets
 secrets.py
+
+# Generated
+bundle.zip

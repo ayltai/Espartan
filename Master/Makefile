@@ -1,7 +1,7 @@
 DOCKER_OWNER = ayltai
 DOCKER_REPO  = geekylifehacks
 PRODUCT_NAME = espartan-master
-VERSION      = 0.5.15
+VERSION      = 0.6.0
 
 deploy: prune build publish
 

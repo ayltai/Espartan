@@ -18,6 +18,7 @@ class AppConfig(BaseSettings):
     heating_min_temperature     : int = 16
     outbox_processing_interval  : int = 10
     sentry_dsn                  : str = ''
+    upload_path                 : str = '/opt/espartan/ota'
 
     model_config = SettingsConfigDict(
         env_file=ENV_FILE if path.exists(ENV_FILE) else '.env',

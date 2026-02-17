@@ -14,9 +14,10 @@ clean:
 	pip uninstall -y -r requirements.txt
 
 upgrade:
+	cp -rf ../../espark/espark-node/scripts ./
 	mkdir -p esparknode
 	rm -rf ./esparknode/*
-	cp -r ../../espark/espark-node/esparknode ./
+	cp -rf ../../espark/espark-node/esparknode ./
 	cp -f ../../espark/espark-node/Makefile.template ./Makefile
 	pip install --upgrade --upgrade-strategy eager --no-cache-dir --prefer-binary -r requirements.txt
 
@@ -40,6 +41,9 @@ test:
 flash:
 	esptool erase-flash
 	esptool --chip ${BOARD} -b ${BAUD} --before default-reset --after hard-reset write-flash 0 ${FIRMWARE}
+
+bundle:
+	python scripts/bundle.py
 
 deploy:
 	mpremote connect /dev/ttyACM0 cp -rf ./esparknode :/

@@ -41,25 +41,17 @@
                 "CFBundleLocalizations" : [
                     "en"
                 ]
-            },
-            "bundleIdentifier"  : "com.geekylifehacks.espartan"
+            }
         },
         "android"            : {
             "adaptiveIcon"                 : {
                 "foregroundImage" : "./assets/adaptive-icon.png",
                 "backgroundColor" : "#ffffff"
             },
-            "edgeToEdgeEnabled"            : true,
-            "predictiveBackGestureEnabled" : false,
-            "package"           : "com.geekylifehacks.espartan"
+            "predictiveBackGestureEnabled" : false
         },
         "web"                : {
             "favicon" : "./assets/favicon.png"
-        },
-        "extra"              : {
-            "eas" : {
-                "projectId" : "c5c600c1-1154-4c36-b508-b88a05caf750"
-            }
         }
     }
 }

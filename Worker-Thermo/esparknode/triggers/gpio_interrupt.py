@@ -30,4 +30,4 @@ class GpioInterrupt(BaseTrigger):
         state = pin.value()
 
         for callback in self.callbacks:
-            callback(True if state else False, self, self.pins.index(pin))
+            callback(bool(state), self, self.pins.index(pin))

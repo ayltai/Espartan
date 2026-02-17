@@ -1,6 +1,7 @@
 import esparknode.configs
 
 from esparknode.triggers.base_trigger import BaseTrigger
+from esparknode.utils.base_ota_manager import BaseOtaManager
 from esparknode.utils.logging import log_crash
 
 import src.configs
@@ -12,11 +13,13 @@ if esparknode.configs.ENVIRONMENT == 'unix':
     from esparknode.networks.dummy_bluetooth import BluetoothManager
     from esparknode.networks.dummy_wifi import WiFiManager
     from esparknode.networks.simple_mqtt import MQTTManager
-    from esparknode.utils.simple_sleeper import Sleeper
+    from esparknode.utils.dummy_ota_manager import OtaManager
     from esparknode.utils.dummy_watchdog import Watchdog
+    from esparknode.utils.simple_sleeper import Sleeper
 
-    device_id : bytes             = b'Worker-Door'
-    triggers  : list[BaseTrigger] = []
+    device_id   : bytes             = b'Worker-Door'
+    triggers    : list[BaseTrigger] = []
+    ota_manager : BaseOtaManager    = OtaManager()
 elif esparknode.configs.ENVIRONMENT == 'esp32':
     from machine import Pin, unique_id
 
@@ -24,6 +27,7 @@ elif esparknode.configs.ENVIRONMENT == 'esp32':
     from esparknode.networks.esp32_mqtt import MQTTManager
     from esparknode.networks.esp32_wifi import WiFiManager
     from esparknode.triggers.gpio_interrupt import GpioInterrupt
+    from esparknode.utils.esp32_ota_manager import OtaManager
     from esparknode.utils.esp32_sleeper import Sleeper
     from esparknode.utils.esp32_watchdog import Watchdog
 
@@ -32,6 +36,8 @@ elif esparknode.configs.ENVIRONMENT == 'esp32':
     triggers : list[BaseTrigger] = [
         GpioInterrupt(pins=[src.configs.DOOR_IN_PIN, src.configs.DOOR_OUT_PIN], pull=Pin.PULL_UP),
     ]
+
+    ota_manager : BaseOtaManager = OtaManager()
 else:
     raise RuntimeError(f'Unknown environment in configuration: {esparknode.configs.ENVIRONMENT}')
 
@@ -52,6 +58,7 @@ try:
         wifi_manager      = wifi_manager,
         mqtt_manager      = mqtt_manager,
         bluetooth_manager = bluetooth_manager,
+        ota_manager       = ota_manager,
         triggers          = triggers,
     ).start()
 except Exception as e:

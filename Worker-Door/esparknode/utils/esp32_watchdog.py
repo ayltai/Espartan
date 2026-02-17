@@ -10,11 +10,13 @@ watchdog : WDT | None = None
 
 class Watchdog(BaseWatchdog):
     def __init__(self) -> None:
+        # pylint: disable=global-statement
         global watchdog
         if WATCHDOG_ENABLED and watchdog is None:
             watchdog = WDT(timeout=WATCHDOG_TIMEOUT)
 
     def feed(self) -> None:
+        # pylint: disable=global-variable-not-assigned
         global watchdog
         if watchdog is not None:
             watchdog.feed()

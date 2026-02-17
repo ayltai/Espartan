@@ -63,5 +63,7 @@ app.include_router(TriggerRouter().router)
 
 app.add_middleware(CORSMiddleware, expose_headers=['X-Total-Count'], allow_headers=['*'], allow_methods=['*'], allow_origins=['*'])
 
+app.mount('/ota', StaticFiles(directory=app_config.upload_path, html=False), name='ota')
+
 if app_config.environment != 'dev':
     app.mount('/web', SpaStaticFiles(directory=path.join(path.dirname(__file__), '..', 'web'), html=True), name='web')
