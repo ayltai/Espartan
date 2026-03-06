@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 from esparkcore.data.models import Device, OutboxEvent
 from esparkcore.data.repositories import DeviceRepository, OutboxRepository, TelemetryRepository
@@ -30,13 +30,14 @@ async def evaluate():
 
         log_debug(f'Current actuator state: {current_state}')
 
-        values: list[float] = []
+        values : list[float] = []
+        now    : datetime    = datetime.now(timezone.utc)
 
         # pylint: disable=no-member
         devices = await device_repo.list(session, Device.capabilities.contains('temperature'))
         for device in devices:
             telemetry = await telemetry_repo.get_latest_for_device(session, device.id, 'temperature')
-            if telemetry:
+            if telemetry and telemetry.timestamp > now - timedelta(hours=1):
                 values.append(telemetry.value / 100.0)
 
         decision = await engine.decide(values)

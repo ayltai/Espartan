@@ -17,6 +17,7 @@ class AppConfig(BaseSettings):
     heating_evaluation_strategy : str = 'min'
     heating_min_temperature     : int = 16
     outbox_processing_interval  : int = 10
+    housekeep_interval          : int = 7
     sentry_dsn                  : str = ''
     upload_path                 : str = '/opt/espartan/ota'
 

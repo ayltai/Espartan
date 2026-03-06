@@ -28,7 +28,8 @@
                     "project"      : "espartan-app",
                     "organization" : "geekylifehacks"
                 }
-            ]
+            ],
+            "@sentry/react-native"
         ],
         "splash"             : {
             "image"           : "./assets/splash-icon.png",

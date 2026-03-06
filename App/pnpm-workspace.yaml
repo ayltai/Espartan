@@ -3,3 +3,4 @@ nodeLinker: hoisted
 onlyBuiltDependencies:
   - '@sentry/cli'
   - '@shopify/react-native-skia'
+  - unrs-resolver

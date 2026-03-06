@@ -15,7 +15,7 @@ from sentry_sdk import init
 from .data.repositories import RelayRepository, SettingsRepository
 from .data import init_settings
 from .routers import RelayRouter, SettingsRouter
-from .schedules import evaluate, process_outbox
+from .schedules import evaluate, housekeep, process_outbox
 from .utils import AppConfig
 
 app_config        = AppConfig()
@@ -42,6 +42,7 @@ async def lifespan(_: FastAPI):
 
     scheduler = await start_scheduler()
     scheduler.add_job(evaluate, 'interval', minutes=app_config.heating_evaluation_interval, id='evaluation_job', replace_existing=True)
+    scheduler.add_job(housekeep, 'interval', days=app_config.housekeep_interval, id='housekeep_job', replace_existing=True)
     scheduler.add_job(process_outbox, 'interval', minutes=app_config.heating_evaluation_interval, id='outbox_consumer_job', replace_existing=True)
 
     create_task(MQTTManager(version_repo=version_repo, device_repo=device_repo, notification_repo=notification_repo, telemetry_repo=telemetry_repo, trigger_repo=trigger_repo).start())
