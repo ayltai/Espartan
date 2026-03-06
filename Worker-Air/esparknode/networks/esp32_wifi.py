@@ -1,0 +1,50 @@
+# pylint: disable=import-error
+from network import WLAN
+# pylint: disable=wrong-import-order
+from time import sleep
+
+from esparknode.networks.base_wifi import BaseWiFiManager
+from esparknode.utils.base_watchdog import BaseWatchdog
+from esparknode.utils.logging import log_debug
+
+TIMEOUT: int = 20
+
+
+class WiFiManager(BaseWiFiManager):
+    def __init__(self, watchdog: BaseWatchdog, ssid: str, password: str) -> None:
+        super().__init__(watchdog, ssid, password)
+
+        self.wlan = WLAN(WLAN.IF_STA)
+
+    def ensure_wifi_on(self) -> bool:
+        self._hard_reset_wifi()
+
+        if not self.wlan.isconnected():
+            log_debug(f'Connecting to WiFi SSID: {self.ssid}')
+            self.wlan.connect(self.ssid, self.password)
+
+            timeout: int = 0
+            while not self.wlan.isconnected() and timeout < TIMEOUT:
+                log_debug(f'WiFi status: {self.wlan.status()}')
+
+                self.watchdog.feed()
+
+                sleep(1)
+
+                timeout += 1
+
+        log_debug(f'WiFi connected: {self.wlan.ifconfig()}')
+        return self.wlan.isconnected()
+
+    def ensure_wifi_off(self) -> bool:
+        self.wlan.active(False)
+        log_debug('WiFi turned off')
+
+        return not self.wlan.isconnected()
+
+    def _hard_reset_wifi(self):
+        self.wlan.active(False)
+        sleep(1)
+        self.wlan.active(True)
+        self.wlan.disconnect()
+        sleep(1)

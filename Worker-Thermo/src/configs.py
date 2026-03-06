@@ -2,7 +2,7 @@ import esparknode.configs
 import esparknode.constants
 
 esparknode.constants.NODE_NAME    = 'Espartan-Thermo'
-esparknode.constants.NODE_VERSION = '0.6.0'
+esparknode.constants.NODE_VERSION = '0.6.1'
 
 esparknode.configs.ENVIRONMENT = 'unix'
 
@@ -53,7 +53,7 @@ VOLTAGE_PIN     : int = 1
 RELAY_SET_PIN   : int = 2
 RELAY_RESET_PIN : int = 3
 
-VOLTAGE_FULL  : float = 3 * 1.335
-VOLTAGE_EMPTY : float = 3 * 1.225
+VOLTAGE_FULL  : float = 3 * 1.320
+VOLTAGE_EMPTY : float = 3 * 1.245
 
 VOLTAGE_DIVIDER_RATIO : float = 5.0

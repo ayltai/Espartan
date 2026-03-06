@@ -61,7 +61,7 @@ class WorkerNode(BaseNode):
             'value'     : (100 if value else -100) if pin_index == 0 else (200 if value else -200) if pin_index == 1 else 0,
         }))
 
-    def publish_telemetry(self) -> None:
+    def publish_telemetry(self) -> dict:
         if len(self.triggers) > 0:
             for trigger in self.triggers:
                 if esparknode.configs.ENVIRONMENT == 'esp32':
@@ -79,6 +79,8 @@ class WorkerNode(BaseNode):
                         self._on_triggered(mail_out_door_open, trigger, 1)
 
         self.start_detection()
+
+        return {}
 
     def start_detection(self) -> None:
         if len(self.triggers) > 0:

@@ -10,6 +10,7 @@ from esparknode.networks.base_mqtt import BaseMQTTManager
 from esparknode.networks.base_wifi import BaseWiFiManager
 from esparknode.sensors.base_sensor import BaseSensor
 from esparknode.triggers.base_trigger import BaseTrigger
+from esparknode.utils.base_ota_manager import BaseOtaManager
 from esparknode.utils.base_sleeper import BaseSleeper
 from esparknode.utils.base_watchdog import BaseWatchdog
 from esparknode.utils.logging import log_debug
@@ -26,6 +27,7 @@ class WorkerNode(BaseNode):
             wifi_manager      : BaseWiFiManager,
             mqtt_manager      : BaseMQTTManager,
             bluetooth_manager : BaseBluetoothManager = None,
+            ota_manager       : BaseOtaManager       = None,
             sensors           : list[BaseSensor]     = None,
             triggers          : list[BaseTrigger]    = None,
     ):
@@ -36,6 +38,7 @@ class WorkerNode(BaseNode):
             wifi_manager=wifi_manager,
             mqtt_manager=mqtt_manager,
             bluetooth_manager=bluetooth_manager,
+            ota_manager=ota_manager,
             sensors=sensors,
             triggers=triggers,
         )
@@ -130,7 +133,7 @@ class WorkerNode(BaseNode):
 
                         self.sleeper.deep_sleep(self.sleep_interval * 5 * 1000)
 
-    def publish_telemetry(self):
+    def publish_telemetry(self) -> dict:
         self._on_door_closed()
 
         self.mqtt_manager.publish(f'{TOPIC_TELEMETRY}/{self.device_id}', dumps({
@@ -140,6 +143,8 @@ class WorkerNode(BaseNode):
         }))
 
         self.start_detection()
+
+        return {}
 
     def start_detection(self) -> None:
         self.turn_on_light()

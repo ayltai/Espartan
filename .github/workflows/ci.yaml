@@ -6,6 +6,24 @@ on:
     tags-ignore:
       - v**
 jobs:
+  worker-air:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+      - name: Setup Python 3
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+          cache: 'pip'
+      - name: Clone espark repository
+        run: git clone https://github.com/ayltai/espark.git ../espark
+      - name: Install dependencies
+        run: make upgrade
+        working-directory: Worker-Air
+      - name: Linting
+        run: make lint
+        working-directory: Worker-Air
   worker-door:
     runs-on: ubuntu-latest
     steps:

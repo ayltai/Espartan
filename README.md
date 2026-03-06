@@ -6,7 +6,10 @@ Espartan is a central management portal for ESP32-based smart thermostats, open-
 
 - **Device Provisioning**: Easily add new ESP32 devices to the system through a simple web interface.
 - **Telemetry Collection**: Collect and visualise telemetry data from connected devices in real-time.
+- **OTA Updates**: Remotely update device firmware without needing physical access.
 - **Remote Control**: Adjust thermostat settings and monitor door sensor status remotely.
+- **Alerts and Notifications**: Receive alerts for specific events, such as door openings or new mail arrivals.
+- **Air Quality Monitoring**: Monitor indoor air quality with particulate matter and CO2 sensors.
 
 ## Hardware Requirements
 
@@ -25,6 +28,19 @@ Espartan is a central management portal for ESP32-based smart thermostats, open-
 - Active buzzer
 - LD2420 human presence sensor
 - PIR motion sensor
+- Battery
+
+### Mailbox Sensor
+- ESP32-C3 development board
+- Magnetic reed switches
+- Battery
+
+### Air Quality Sensor
+- ESP32-C3 development board
+- SPS30 particulate matter sensor
+- SCD40 CO2 sensor
+- DC 5V boost converter
+- I2C bus module
 - Battery
 
 ## Project Structure
@@ -51,6 +67,14 @@ Espartan/
 │       ├── public/           # Static assets
 │       └── src/
 │           └── index.tsx     # Application entry point
+│
+├── Worker-Air/         # ESP32 air quality sensor application (MicroPython)
+│   ├── src/
+│   │   ├── configs.py        # Application- and device-specific configurations
+│   │   ├── secrets.py        # Credentials and sensitive information
+│   │   └── worker_node.py    # Core application logic
+│   │
+│   └── main.py            # Application entry point
 │
 ├── Worker-Door/        # ESP32 door sensor application (MicroPython)
 │   ├── src/
@@ -114,7 +138,7 @@ Espartan/
 
 - **Install dependencies (only for development):**  
   ```sh
-  cd Worker-Door  # or cd Worker-Thermostat
+  cd Worker-Door  # or cd Worker-Thermostat, Worker-Mail, Worker-Air
   make venv
   source venv/bin/activate
   make upgrade

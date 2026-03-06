@@ -94,13 +94,17 @@ class BaseNode:
             'capabilities' : ','.join(CAPABILITIES),
         }))
 
-    def publish_telemetry(self):
+    def publish_telemetry(self) -> dict:
+        measurements = {}
+
         for sensor in self.sensors:
             deadline = time() + SENSOR_RETRIES
             while time() < deadline:
                 try:
                     telemetry = sensor.read()
                     if telemetry is not None:
+                        measurements.update(telemetry)
+
                         for data_type, value in telemetry.items():
                             payload = {
                                 'device_id' : self.device_id,
@@ -120,6 +124,8 @@ class BaseNode:
                     log_debug(f'Error reading from sensor {sensor.__class__.__name__}: {e}')
 
                     sleep(1)
+
+        return measurements
 
     def start(self) -> None:
         self.register()
@@ -141,18 +147,21 @@ class BaseNode:
 
             self.sleeper.deep_sleep(self.sleep_interval * 1000)
         else:
-            if self.deep_sleep_enabled:
-                self.publish_telemetry()
-            else:
-                while not self.deep_sleep_enabled:
-                    self.publish_telemetry()
-
-                    sleep(self.sleep_interval * 1000)
+            self.publish_telemetry()
 
         self.watchdog.feed()
 
-        if self.deep_sleep_enabled:
-            self.wifi_manager.ensure_wifi_off()
+        self.wifi_manager.ensure_wifi_off()
 
+        if self.deep_sleep_enabled:
             log_debug(f'Deep sleeping for {self.sleep_interval} seconds...')
             self.sleeper.deep_sleep(self.sleep_interval * 1000)
+        else:
+            log_debug(f'Light sleeping for {self.sleep_interval} seconds...')
+            self.sleeper.light_sleep(self.sleep_interval * 1000)
+
+        if ENVIRONMENT == 'esp32':
+            # pylint: disable=import-error,import-outside-toplevel
+            from machine import reset
+
+            reset()
