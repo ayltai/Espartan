@@ -2,7 +2,7 @@ import esparknode.configs
 import esparknode.constants
 
 esparknode.constants.NODE_NAME    = 'Espartan-Door'
-esparknode.constants.NODE_VERSION = '0.6.1'
+esparknode.constants.NODE_VERSION = '0.6.0'
 
 esparknode.configs.ENVIRONMENT = 'unix'
 
@@ -22,7 +22,6 @@ esparknode.configs.UNUSED_PINS = [
     6,
     7,
     9,
-    10,
     20,
     21,
 ]

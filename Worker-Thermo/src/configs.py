@@ -53,7 +53,7 @@ VOLTAGE_PIN     : int = 1
 RELAY_SET_PIN   : int = 2
 RELAY_RESET_PIN : int = 3
 
-VOLTAGE_FULL  : float = 3 * 1.320
-VOLTAGE_EMPTY : float = 3 * 1.245
+VOLTAGE_FULL  : float = 3 * 1.335
+VOLTAGE_EMPTY : float = 3 * 1.230
 
 VOLTAGE_DIVIDER_RATIO : float = 5.0

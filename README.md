@@ -21,6 +21,8 @@ Espartan is a central management portal for ESP32-based smart thermostats, open-
 - Voltage divider for voltage measurement
 - Battery
 
+![Thermostat (Sensor)](Design/circuit_thermo.png)
+
 ### Open-Door Sensor
 
 - ESP32-C3 development board
@@ -30,10 +32,14 @@ Espartan is a central management portal for ESP32-based smart thermostats, open-
 - PIR motion sensor
 - Battery
 
+![Door Sensor](Design/circuit_door.png)
+
 ### Mailbox Sensor
 - ESP32-C3 development board
 - Magnetic reed switches
 - Battery
+
+![Mailbox Sensor](Design/circuit_mail.png)
 
 ### Air Quality Sensor
 - ESP32-C3 development board
@@ -42,6 +48,8 @@ Espartan is a central management portal for ESP32-based smart thermostats, open-
 - DC 5V boost converter
 - I2C bus module
 - Battery
+
+![Air Quality Sensor](Design/circuit_air.png)
 
 ## Project Structure
 

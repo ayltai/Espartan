@@ -107,9 +107,9 @@ class WorkerNode(BaseNode):
         if self.display is not None:
             self.display.fill(0)
 
-            self.display.text(f'PM1.0 : {measurements.get(CAPABILITY_PM1_0, 0):.1f}' if CAPABILITY_PM1_0 in measurements.keys() else 'PM1.0 : -', 8, 4)
+            self.display.text(f'PM1   : {measurements.get(CAPABILITY_PM1_0, 0):.1f}' if CAPABILITY_PM1_0 in measurements.keys() else 'PM1   : -', 8, 4)
             self.display.text(f'PM2.5 : {measurements.get(CAPABILITY_PM2_5, 0):.1f}' if CAPABILITY_PM2_5 in measurements.keys() else 'PM2.5 : -', 8, 16)
-            self.display.text(f'PM4.0 : {measurements.get(CAPABILITY_PM4_0, 0):.1f}' if CAPABILITY_PM4_0 in measurements.keys() else 'PM4.0 : -', 8, 28)
+            self.display.text(f'PM4   : {measurements.get(CAPABILITY_PM4_0, 0):.1f}' if CAPABILITY_PM4_0 in measurements.keys() else 'PM4   : -', 8, 28)
             self.display.text(f'PM10  : {measurements.get(CAPABILITY_PM10, 0):.1f}' if CAPABILITY_PM10 in measurements.keys() else 'PM10  : -', 8, 40)
             self.display.text(f'CO2   : {round(measurements.get(CAPABILITY_CO2, 0))}' if CAPABILITY_CO2 in measurements.keys() else 'CO2   : -', 8, 52)
 

@@ -39,7 +39,7 @@
         "expo-linear-gradient"           : "~55.0.8",
         "expo-localization"              : "~55.0.8",
         "react"                          : "~19.2.4",
-        "react-native"                   : "~0.83.3",
+        "react-native"                   : "~0.83.4",
         "react-native-circular-progress" : "^1.4.1",
         "react-native-gesture-handler"   : "^2.30.0",
         "react-native-paper"             : "^5.15.0",
