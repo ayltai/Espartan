@@ -37,7 +37,7 @@ async def evaluate():
         devices = await device_repo.list(session, Device.capabilities.contains('temperature'))
         for device in devices:
             telemetry = await telemetry_repo.get_latest_for_device(session, device.id, 'temperature')
-            if telemetry and telemetry.timestamp > now - timedelta(hours=1):
+            if telemetry and telemetry.timestamp.replace(tzinfo=timezone.utc) > now - timedelta(hours=1):
                 values.append(telemetry.value / 100.0)
 
         decision = await engine.decide(values)
