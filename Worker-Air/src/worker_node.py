@@ -16,8 +16,7 @@ from esparknode.utils.logging import log_debug
 
 from src.configs import CAPABILITY_CO2, CAPABILITY_PM1_0, CAPABILITY_PM2_5, CAPABILITY_PM4_0, CAPABILITY_PM10, SSD1306_DISPLAY_HEIGHT, SSD1306_DISPLAY_WIDTH, SSD1306_I2C_ADDRESS, THRESHOLDS
 
-STABILIZATION_DELAY : int = 15
-HOUSEKEEP_DELAY     : int = 15
+HOUSEKEEP_DELAY : int = 15
 
 
 class WorkerNode(BaseNode):
@@ -46,18 +45,9 @@ class WorkerNode(BaseNode):
             triggers=triggers,
         )
 
+        self.i2c = i2c
+
         self.altitude: int = 0
-
-        if esparknode.configs.ENVIRONMENT == 'esp32':
-            # pylint: disable=import-outside-toplevel
-            from src.ssd1306 import SSD1306_I2C
-
-            self.display = SSD1306_I2C(SSD1306_DISPLAY_WIDTH, SSD1306_DISPLAY_HEIGHT, i2c=i2c, addr=SSD1306_I2C_ADDRESS)
-            self.display.contrast(10)
-            self.display.invert(choice((True, False)))
-            self.display.fill(0)
-            self.display.text('Initialising...', 8, 28)
-            self.display.show()
 
     def _handle_parameters_update(self, parameters: dict) -> None:
         self.sleep_interval     = parameters.get('sleep_interval', self.sleep_interval)
@@ -82,19 +72,9 @@ class WorkerNode(BaseNode):
                     sleep(1)
 
     def publish_telemetry(self) -> dict:
-        for sensor in self.sensors:
-            if sensor.__class__.__name__ in ['SPS30', 'SCD4X']:
-                if sensor.__class__.__name__ == 'SCD4X':
-                    sensor.configure_altitude(self.altitude)
-
-                sensor.stop()
-                sensor.start()
-
-        deadline = time() + STABILIZATION_DELAY
-        while time() < deadline:
-            self.watchdog.feed()
-
-            sleep(1)
+        # for sensor in self.sensors:
+        #     if sensor.__class__.__name__ == 'SCD4X':
+        #         sensor.configure_altitude(self.altitude)
 
         measurements = super().publish_telemetry()
 
@@ -104,16 +84,22 @@ class WorkerNode(BaseNode):
         return measurements
 
     def _update_display(self, measurements: dict) -> None:
-        if self.display is not None:
-            self.display.fill(0)
+        if esparknode.configs.ENVIRONMENT == 'esp32':
+            # pylint: disable=import-outside-toplevel
+            from src.ssd1306 import SSD1306_I2C
 
-            self.display.text(f'PM1   : {measurements.get(CAPABILITY_PM1_0, 0):.1f}' if CAPABILITY_PM1_0 in measurements.keys() else 'PM1   : -', 8, 4)
-            self.display.text(f'PM2.5 : {measurements.get(CAPABILITY_PM2_5, 0):.1f}' if CAPABILITY_PM2_5 in measurements.keys() else 'PM2.5 : -', 8, 16)
-            self.display.text(f'PM4   : {measurements.get(CAPABILITY_PM4_0, 0):.1f}' if CAPABILITY_PM4_0 in measurements.keys() else 'PM4   : -', 8, 28)
-            self.display.text(f'PM10  : {measurements.get(CAPABILITY_PM10, 0):.1f}' if CAPABILITY_PM10 in measurements.keys() else 'PM10  : -', 8, 40)
-            self.display.text(f'CO2   : {round(measurements.get(CAPABILITY_CO2, 0))}' if CAPABILITY_CO2 in measurements.keys() else 'CO2   : -', 8, 52)
+            display = SSD1306_I2C(SSD1306_DISPLAY_WIDTH, SSD1306_DISPLAY_HEIGHT, i2c=self.i2c, addr=SSD1306_I2C_ADDRESS)
+            display.contrast(10)
+            display.invert(choice((True, False)))
+            display.fill(0)
 
-            self.display.show()
+            display.text(f'PM1   : {measurements.get(CAPABILITY_PM1_0, 0):.1f}' if CAPABILITY_PM1_0 in measurements.keys() else 'PM1   : -', 8, 4)
+            display.text(f'PM2.5 : {measurements.get(CAPABILITY_PM2_5, 0):.1f}' if CAPABILITY_PM2_5 in measurements.keys() else 'PM2.5 : -', 8, 16)
+            display.text(f'PM4   : {measurements.get(CAPABILITY_PM4_0, 0):.1f}' if CAPABILITY_PM4_0 in measurements.keys() else 'PM4   : -', 8, 28)
+            display.text(f'PM10  : {measurements.get(CAPABILITY_PM10, 0):.1f}' if CAPABILITY_PM10 in measurements.keys() else 'PM10  : -', 8, 40)
+            display.text(f'CO2   : {round(measurements.get(CAPABILITY_CO2, 0))}' if CAPABILITY_CO2 in measurements.keys() else 'CO2   : -', 8, 52)
+
+            display.show()
 
     @staticmethod
     def _trigger_alert(measurements: dict) -> None:
@@ -130,6 +116,6 @@ class WorkerNode(BaseNode):
             from esparknode.utils.esp32_gpio import GpioPin
 
             if any(ratio > 1 for ratio in ratios):
-                GpioPin(8).set_low()
+                GpioPin(8, hold=True).set_low()
             else:
-                GpioPin(8).set_high()
+                GpioPin(8, hold=True).set_high()

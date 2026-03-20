@@ -31,8 +31,8 @@ if esparknode.configs.ENVIRONMENT == 'unix':
     from esparknode.networks.simple_mqtt import MQTTManager
     from esparknode.sensors.dummy_sensor import DummySensor
     from esparknode.utils.dummy_ota_manager import OtaManager
-    from esparknode.utils.simple_sleeper import Sleeper
     from esparknode.utils.dummy_watchdog import Watchdog
+    from esparknode.utils.simple_sleeper import Sleeper
 
     device_id : bytes = b'Worker-Air'
 
@@ -47,11 +47,8 @@ if esparknode.configs.ENVIRONMENT == 'unix':
     mqtt_manager      = MQTTManager(wifi_manager=wifi_manager, watchdog=watchdog, device_id=''.join(f'{b:02x}' for b in device_id), host=MQTT_HOST)
     sleeper           = Sleeper()
 elif esparknode.configs.ENVIRONMENT == 'esp32':
-    # pylint: import-outside-toplevel
-    from time import sleep
-
     # pylint: disable=import-error,import-outside-toplevel
-    from machine import I2C, Pin, unique_id
+    from machine import unique_id
 
     from esparknode.networks.esp32_bluetooth import BluetoothManager
     from esparknode.networks.esp32_mqtt import MQTTManager
@@ -59,28 +56,13 @@ elif esparknode.configs.ENVIRONMENT == 'esp32':
     from esparknode.sensors.scd4x_sensor import SCD4X
     from esparknode.sensors.sps30_sensor import SPS30
     from esparknode.utils.esp32_ota_manager import OtaManager
+    from esparknode.utils.safe_i2c import SafeI2C
     from esparknode.utils.esp32_sleeper import Sleeper
     from esparknode.utils.esp32_watchdog import Watchdog
 
     device_id = unique_id()
 
-    scl = Pin(src.configs.SCL_PIN, Pin.OUT, pull=Pin.PULL_UP)
-    sda = Pin(src.configs.SDA_PIN, Pin.IN, pull=Pin.PULL_UP)
-
-    if sda.value() == 0:
-        log_debug('I2C bus is busy, attempting to free it by toggling SCL line...')
-        for _ in range(9):
-            scl.value(0)
-            sleep(0.1)
-            scl.value(1)
-            sleep(0.1)
-
-            if sda.value() == 1:
-                log_debug('Successfully freed I2C bus.')
-
-                break
-
-    i2c = I2C(0, scl=Pin(src.configs.SCL_PIN), sda=Pin(src.configs.SDA_PIN), freq=100_000, timeout=100_000)
+    i2c = SafeI2C(0, scl=src.configs.SCL_PIN, sda=src.configs.SDA_PIN, freq=100_000, timeout=100_000)
 
     sensors = [
         SCD4X(i2c=i2c, address=src.configs.SCD40_I2C_ADDRESS),

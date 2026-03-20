@@ -11,7 +11,7 @@ from esparknode.triggers.base_trigger import BaseTrigger
 from esparknode.utils.base_ota_manager import BaseOtaManager
 from esparknode.utils.base_sleeper import BaseSleeper
 from esparknode.utils.base_watchdog import BaseWatchdog
-from esparknode.utils.logging import log_debug
+from esparknode.utils.logging import log_crash, log_debug
 
 
 class BaseNode:
@@ -116,14 +116,16 @@ class BaseNode:
 
                             self.mqtt_manager.publish(f'{TOPIC_TELEMETRY}/{self.device_id}', dumps(payload))
 
-                            self.watchdog.feed()
-
                         break
                 # pylint: disable=broad-exception-caught
                 except Exception as e:
-                    log_debug(f'Error reading from sensor {sensor.__class__.__name__}: {e}')
+                    log_crash(e, self.device_id, self.mqtt_manager)
 
                     sleep(1)
+
+            self.watchdog.feed()
+
+            sleep(1)
 
         return measurements
 

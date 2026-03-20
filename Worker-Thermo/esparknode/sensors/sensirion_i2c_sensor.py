@@ -1,13 +1,10 @@
 from struct import unpack
 
-# pylint: disable=import-error
-from machine import I2C
-
 from esparknode.sensors.base_sensor import BaseSensor
 
 
 class SensirionI2C(BaseSensor):
-    def __init__(self, i2c: I2C, address: int):
+    def __init__(self, i2c, address: int):
         self.i2c     = i2c
         self.address = address
 

@@ -1,23 +1,22 @@
 from struct import pack
-from time import sleep
-
-# pylint: disable=import-error
-from machine import I2C
+from time import sleep, time
 
 from esparknode.sensors.sensirion_i2c_sensor import SensirionI2C
 
 TARGET_CO2: int = 400
 
+STABILIZATION_DELAY : int = 30
+
 
 class SCD4X(SensirionI2C):
-    def __init__(self, i2c: I2C, address: int = 0x62):
+    def __init__(self, i2c, address: int = 0x62):
         super().__init__(i2c, address)
 
         self.is_started = False
 
-        self.stop()
-
     def configure_altitude(self, altitude: int) -> None:
+        sleep(1)
+
         self.i2c.writeto(self.address, b'\x24\x27' + altitude.to_bytes(2, 'big') + bytes([self._calculate_crc(altitude.to_bytes(2, 'big'))]))
 
         sleep(1)
@@ -29,10 +28,16 @@ class SCD4X(SensirionI2C):
 
         self.is_started = True
 
+        sleep(1)
+
     def stop(self):
+        sleep(1)
+
         self.i2c.writeto(self.address, b'\x3f\x86')
 
         self.is_started = False
+
+        sleep(1)
 
     def housekeep(self) -> None:
         is_started = self.is_started
@@ -53,6 +58,12 @@ class SCD4X(SensirionI2C):
             self.start()
 
     def read(self) -> dict:
+        self.start()
+
+        deadline = time() + STABILIZATION_DELAY
+        while time() < deadline:
+            sleep(1)
+
         results = {}
 
         while True:
@@ -75,5 +86,9 @@ class SCD4X(SensirionI2C):
         results['co2']         = co2
         results['temperature'] = temperature
         results['humidity']    = humidity
+
+        self.stop()
+
+        self.i2c.deinit()
 
         return results
