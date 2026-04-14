@@ -1,6 +1,6 @@
 {
     "name"            : "espartan-master",
-    "version"         : "0.6.1",
+    "version"         : "0.6.4",
     "author"          : {
         "name" : "Alan Tai"
     },
@@ -29,13 +29,13 @@
         "serve"   : "cross-env REFINE_NO_TELEMETRY=true refine serve"
     },
     "dependencies"    : {
-        "@sentry/react" : "^10.45.0",
-        "antd"          : "^6.3.3",
-        "espark-react"  : "^0.6.1",
-        "i18next"       : "^25.8.19",
-        "react"         : "^19.2.4",
-        "react-dom"     : "^19.2.4",
-        "react-i18next" : "^16.5.8"
+        "@sentry/react" : "^10.48.0",
+        "antd"          : "^6.3.5",
+        "espark-react"  : "^0.6.7",
+        "i18next"       : "^26.0.4",
+        "react"         : "^19.2.5",
+        "react-dom"     : "^19.2.5",
+        "react-i18next" : "^17.0.3"
     },
     "devDependencies" : {
         "@eslint/eslintrc"           : "^3.3.5",
@@ -47,30 +47,31 @@
         "@types/react"               : "^19.2.14",
         "@types/react-dom"           : "^19.2.3",
         "@types/react-test-renderer" : "^19.1.0",
-        "@typescript-eslint/parser"  : "^8.57.1",
+        "@typescript-eslint/parser"  : "^8.58.2",
         "@vitejs/plugin-react-swc"   : "^4.3.0",
-        "@vitest/coverage-v8"        : "^4.1.0",
-        "@vitest/ui"                 : "^4.1.0",
+        "@vitest/coverage-v8"        : "^4.1.4",
+        "@vitest/ui"                 : "^4.1.4",
         "cross-env"                  : "^10.1.0",
         "eslint"                     : "~9.39.4",
         "eslint-plugin-import"       : "^2.32.0",
         "eslint-plugin-prefer-arrow" : "^1.2.3",
         "eslint-plugin-react"        : "^7.37.5",
         "eslint-plugin-react-hooks"  : "^7.0.1",
-        "eslint-plugin-unicorn"      : "^63.0.0",
-        "globals"                    : "^17.4.0",
-        "jsdom"                      : "^29.0.1",
+        "eslint-plugin-unicorn"      : "^64.0.0",
+        "globals"                    : "^17.5.0",
+        "jsdom"                      : "^29.0.2",
         "prop-types"                 : "^15.8.1",
         "typescript"                 : "^5.9.3",
-        "typescript-eslint"          : "^8.57.1",
-        "vite"                       : "^8.0.1",
-        "vitest"                     : "^4.1.0",
+        "typescript-eslint"          : "^8.58.2",
+        "vite"                       : "^8.0.8",
+        "vitest"                     : "^4.1.4",
         "vitest-fetch-mock"          : "^0.4.5"
     },
     "resolutions"     : {
-        "qs"        : "^6.14.2",
-        "lodash"    : "^4.17.23",
-        "lodash-es" : "^4.17.23"
+        "lodash"         : "^4.18.0",
+        "lodash-es"      : "^4.18.0",
+        "path-to-regexp" : "^8.4.0",
+        "qs"             : "^6.14.2"
     },
     "engines"         : {
         "node" : ">=22",

@@ -31,19 +31,19 @@
     "dependencies"    : {
         "@expo/vector-icons"             : "~15.1.1",
         "@reduxjs/toolkit"               : "^2.11.2",
-        "@sentry/react-native"           : "^8.5.0",
+        "@sentry/react-native"           : "^8.7.0",
         "@shopify/react-native-skia"     : "~2.4.21",
         "canvaskit-wasm"                 : "^0.41.0",
         "date-fns"                       : "^4.1.0",
-        "expo"                           : "~55.0.8",
-        "expo-linear-gradient"           : "~55.0.9",
-        "expo-localization"              : "~55.0.9",
+        "expo"                           : "~55.0.15",
+        "expo-linear-gradient"           : "~55.0.13",
+        "expo-localization"              : "~55.0.13",
         "react"                          : "~19.2.4",
         "react-native"                   : "~0.83.4",
         "react-native-circular-progress" : "^1.4.1",
-        "react-native-gesture-handler"   : "^2.30.0",
-        "react-native-paper"             : "^5.15.0",
-        "react-native-reanimated"        : "~4.2.2",
+        "react-native-gesture-handler"   : "^2.31.1",
+        "react-native-paper"             : "^5.15.1",
+        "react-native-reanimated"        : "~4.2.3",
         "react-native-safe-area-context" : "~5.7.0",
         "react-native-screens"           : "~4.24.0",
         "react-native-svg"               : "~15.15.4",
@@ -52,16 +52,21 @@
         "victory-native"                 : "^41.20.2"
     },
     "devDependencies" : {
-        "@react-native/metro-config"    : "^0.84.1",
+        "@react-native/metro-config"    : "^0.85.1",
         "@testing-library/react-native" : "^13.3.3",
         "@types/react"                  : "^19.2.14",
         "react-dom"                     : "~19.2.4",
         "react-native-web"              : "^0.21.2",
-        "typescript"                    : "^5.9.3"
+        "typescript"                    : "^6.0.2"
     },
     "resolutions"     : {
-        "minimatch" : "^10.2.3",
-        "undici"    : "^6.24.0"
+        "@xmldom/xmldom"  : "^0.8.12",
+        "brace-expansion" : "^5.0.5",
+        "minimatch"       : "^10.2.3",
+        "node-forge"      : "^1.4.0",
+        "picomatch"       : "^4.0.4",
+        "undici"          : "^6.24.0",
+        "yaml"            : "^2.8.3"
     },
     "jest"            : {
         "collectCoverage" : true,
