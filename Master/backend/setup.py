@@ -9,7 +9,7 @@ extra_requirements      = read_requirements('requirements.dev.txt')
 
 setup(
     name='espartan-master',
-    version='0.6.5',
+    version='0.6.10',
     packages=find_packages(),
     install_requires=production_requirements,
     extras_require={

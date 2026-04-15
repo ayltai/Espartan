@@ -1,6 +1,6 @@
 aiosqlite==0.22.1
 fastapi==0.135.3
 #espark-core @file:../../../espark/espark-core
-espark-core==0.6.9
+espark-core==0.6.10
 pydantic-settings==2.13.1
 sentry-sdk[fastapi]==2.58.0
