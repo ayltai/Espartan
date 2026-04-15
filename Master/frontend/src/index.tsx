@@ -3,6 +3,7 @@ import { Alert, theme, Typography, } from 'antd';
 import { EsparkApp, } from 'espark-react';
 import { StrictMode, Suspense, } from 'react';
 import { createRoot, } from 'react-dom/client';
+import './index.css';
 
 if (import.meta.env.VITE_APP_SENTRY_API_KEY) init({
     dsn          : import.meta.env.VITE_APP_SENTRY_API_KEY,
