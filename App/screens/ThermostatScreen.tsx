@@ -160,10 +160,10 @@ export const ThermostatScreen = () => {
                                     alignItems     : 'center',
                                     justifyContent : 'center',
                                 }}
-                                colors={currentTemperature < (configurationsData ? configurationsData.thresholdOn * 100 : 1600) ? [
+                                colors={currentTemperature < 1600 ? [
                                     '#bbdefb',
                                     '#64b5f6',
-                                ] : currentTemperature > (configurationsData ? configurationsData?.thresholdOff * 100 : 2000) ? [
+                                ] : currentTemperature > 2400 ? [
                                     '#ffccbc',
                                     '#ff8a65',
                                 ] : [
