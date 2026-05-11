@@ -18,19 +18,20 @@ export const DeviceChart = ({
 
     const data : Record<string, number>[] = [];
 
-    const nextHour = new Date().setMinutes(0, 0, 0) + 60 * 60 * 1000;
-    const yesterday= nextHour - 24 * 60 * 60 * 1000;
+    const timezoneOffset = new Date().getTimezoneOffset() * 60 * 1000;
+    const nextHour       = new Date().setMinutes(0, 0, 0) - timezoneOffset;
+    const yesterday      = nextHour - 24 * 60 * 60 * 1000;
 
     let minTemperature = Infinity;
     let maxTemperature = -Infinity;
 
-    telemetries.filter(telemetry => telemetry.dataType === 'temperature').filter(telemetry => new Date(telemetry.timestamp).getTime() >= yesterday).sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()).forEach(telemetry => {
+    telemetries.filter(telemetry => telemetry.dataType === 'temperature').filter(telemetry => new Date(telemetry.timestamp).getTime() - timezoneOffset >= yesterday).sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()).forEach(telemetry => {
         const existingEntry = data.find(d => d.timestamp === new Date(telemetry.timestamp).getTime());
         if (existingEntry) {
             existingEntry[telemetry.deviceId] = telemetry.value / 100;
         } else {
             const entry : Record<string, number> = {
-                timestamp : new Date(telemetry.timestamp).getTime(),
+                timestamp : new Date(telemetry.timestamp).getTime() - timezoneOffset,
             };
 
             entry[telemetry.deviceId] = telemetry.value / 100;
@@ -55,7 +56,6 @@ export const DeviceChart = ({
                 xKey='timestamp'
                 yKeys={devices.map(device => device.id)}
                 xAxis={{
-                    tickCount    : 13,
                     tickValues   : [
                         nextHour - 24 * 60 * 60 * 1000,
                         nextHour - 20 * 60 * 60 * 1000,
@@ -85,7 +85,8 @@ export const DeviceChart = ({
                 domain={{
                     x : [
                         yesterday,
-                        Math.max(...(telemetries.filter(telemetry => telemetry.dataType === 'temperature').map(telemetry => new Date(telemetry.timestamp).getTime()))),
+                        nextHour,
+                        //Math.max(...(telemetries.filter(telemetry => telemetry.dataType === 'temperature').map(telemetry => new Date(telemetry.timestamp).getTime() - timezoneOffset))),
                     ],
                     y : [
                         minTemperature,

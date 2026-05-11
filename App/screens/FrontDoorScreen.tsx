@@ -31,6 +31,8 @@ export const FrontDoorScreen = () => {
 
     const status = telemetryData?.filter(item => item.deviceId === DEVICE_FRONT_DOOR && item.dataType === 'door_open')[0].value;
 
+    const timezoneOffset = new Date().getTimezoneOffset() * 60 * 1000;
+
     const handleToggleDetection = () => {
         setDevice({
             ...deviceData!,
@@ -141,9 +143,9 @@ export const FrontDoorScreen = () => {
                                         <List.Item
                                             key={item.id}
                                             title={item.value === 100 ? item.dataType === 'motion' ? t('label_door_status_motion_detected') : t('label_door_status_open') : item.value === 200 ? t('label_door_status_warning') : item.value === 300 ? t('label_door_status_critical') : t('label_door_status_closed')}
-                                            description={`${capitaliseFirstLetter(formatDistanceToNow(new Date(item.timestamp), {
+                                            description={`${capitaliseFirstLetter(formatDistanceToNow(new Date(new Date(item.timestamp).getTime() - timezoneOffset), {
                                                 addSuffix : true,
-                                            }))} • ${intlFormat(item.timestamp, {
+                                            }))} • ${intlFormat(new Date(new Date(item.timestamp).getTime() - timezoneOffset), {
                                                 dateStyle : 'medium',
                                                 timeStyle : 'medium',
                                             }, {

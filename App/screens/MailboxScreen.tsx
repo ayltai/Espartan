@@ -28,6 +28,8 @@ export const MailboxScreen = () => {
 
     const hasMail = Math.abs(differenceInSeconds(lastInboxOpenedData ? new Date(lastInboxOpenedData.timestamp) : new Date(0), lastOutboxOpenedData ? new Date(lastOutboxOpenedData.timestamp) : new Date(0))) < 60;
 
+    const timezoneOffset = new Date().getTimezoneOffset() * 60 * 1000;
+
     useEffect(() => {
         if (deviceError) handleError(deviceError);
     }, [ deviceError, ]);
@@ -105,9 +107,9 @@ export const MailboxScreen = () => {
                                             <List.Item
                                                 key={item.id}
                                                 title={item.value === 100 ? t('label_mail_status_inbox_opened') : item.value === -100 ? t('label_mail_status_inbox_closed') : item.value === 200 ? t('label_mail_status_outbox_opened') : item.value === -200 ? t('label_mail_status_outbox_closed') : t('label_mail_status_unknown')}
-                                                description={`${capitaliseFirstLetter(formatDistanceToNow(new Date(item.timestamp), {
+                                                description={`${capitaliseFirstLetter(formatDistanceToNow(new Date(new Date(item.timestamp).getTime() - timezoneOffset), {
                                                     addSuffix : true,
-                                                }))} • ${intlFormat(item.timestamp, {
+                                                }))} • ${intlFormat(new Date(new Date(item.timestamp).getTime() - timezoneOffset), {
                                                     dateStyle : 'medium',
                                                     timeStyle : 'medium',
                                                 }, {
