@@ -18,8 +18,11 @@ export const DeviceChart = ({
 
     const data : Record<string, number>[] = [];
 
-    const yesterday   = new Date().getTime() - 24 * 60 * 60 * 1000;
-    const currentHour = new Date().setMinutes(0, 0, 0);
+    const nextHour = new Date().setMinutes(0, 0, 0) + 60 * 60 * 1000;
+    const yesterday= nextHour - 24 * 60 * 60 * 1000;
+
+    let minTemperature = Infinity;
+    let maxTemperature = -Infinity;
 
     telemetries.filter(telemetry => telemetry.dataType === 'temperature').filter(telemetry => new Date(telemetry.timestamp).getTime() >= yesterday).sort((a, b) => new Date(a.timestamp).getTime() - new Date(b.timestamp).getTime()).forEach(telemetry => {
         const existingEntry = data.find(d => d.timestamp === new Date(telemetry.timestamp).getTime());
@@ -34,7 +37,13 @@ export const DeviceChart = ({
 
             data.push(entry);
         }
+
+        if (telemetry.value / 100 < minTemperature) minTemperature = telemetry.value / 100;
+        if (telemetry.value / 100 > maxTemperature) maxTemperature = telemetry.value / 100;
     });
+
+    minTemperature = Math.floor(minTemperature);
+    maxTemperature = Math.ceil(maxTemperature);
 
     return (
         <View style={{
@@ -48,13 +57,13 @@ export const DeviceChart = ({
                 xAxis={{
                     tickCount    : 13,
                     tickValues   : [
-                        currentHour - 24 * 60 * 60 * 1000,
-                        currentHour - 20 * 60 * 60 * 1000,
-                        currentHour - 16 * 60 * 60 * 1000,
-                        currentHour - 12 * 60 * 60 * 1000,
-                        currentHour - 8 * 60 * 60 * 1000,
-                        currentHour - 4 * 60 * 60 * 1000,
-                        currentHour,
+                        nextHour - 24 * 60 * 60 * 1000,
+                        nextHour - 20 * 60 * 60 * 1000,
+                        nextHour - 16 * 60 * 60 * 1000,
+                        nextHour - 12 * 60 * 60 * 1000,
+                        nextHour - 8 * 60 * 60 * 1000,
+                        nextHour - 4 * 60 * 60 * 1000,
+                        nextHour,
                     ],
                     formatXLabel : value => intlFormat(value, {
                         timeStyle : 'short',
@@ -64,17 +73,9 @@ export const DeviceChart = ({
                 }}
                 yAxis={[
                     {
-                        tickCount    : 6,
-                        tickValues   : [
-                            12,
-                            14,
-                            16,
-                            18,
-                            20,
-                            22,
-                            24,
-                            26,
-                        ],
+                        tickValues   : Array.from({
+                            length : maxTemperature - minTemperature,
+                        }, (_, i) => minTemperature + i),
                         formatYLabel : value => `${value}°C`,
                         font         : font,
                     },
@@ -87,15 +88,15 @@ export const DeviceChart = ({
                         Math.max(...(telemetries.filter(telemetry => telemetry.dataType === 'temperature').map(telemetry => new Date(telemetry.timestamp).getTime()))),
                     ],
                     y : [
-                        12,
-                        26,
+                        minTemperature,
+                        maxTemperature,
                     ],
                 }}>
                 {({ points, }) => devices.map(device => device.id).map((id, index) => (
                     <Line
                         connectMissingData
                         key={id}
-                        curveType='natural'
+                        curveType='basis'
                         strokeWidth={2}
                         color={colours[index % colours.length]}
                         points={points[id]} />
